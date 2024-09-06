@@ -73,7 +73,7 @@ export default function Home() {
             <div className="relative flex flex-col">
               {isClicked && (
                 <LinkCard themeColor={themeColor}
-                          className="absolute bottom-14 left-1/2 -translate-x-1/2 -translate-y-26 whitespace-nowrap"
+                          className="absolute bottom-14 left-1/2 -translate-x-1/2 -translate-y-26 min-[400px]:whitespace-nowrap"
                           message={true}
                 >
                   {phrases[phraseIndex]}
@@ -83,8 +83,8 @@ export default function Home() {
               <LinkCard themeColor={themeColor}
                         target="_blank"
                         className="cursor-pointer"
-                        onMouseDown={handleClick}
-                        onMouseUp={handleMouseUp}
+                        onPointerDown={handleClick}
+                        onPointerUp={handleMouseUp}
               >
                 <GameIcon color={themeColor}/>
               </LinkCard>
