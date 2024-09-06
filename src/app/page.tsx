@@ -51,9 +51,10 @@ export default function Home() {
         <div className="flex flex-col">
           <h6 className="text-sm text-darkslate-300 font-light">welcome</h6>
           <p className="font-light">
-            Hi, I'm <span className="font-bold">Maksym Akulov</span>. I'm a software engineer based in Ringebu,
-            Norway. I'm passionate about building
-            software that solves real-world problems and improves people's lives.
+            Hi, I&apos;m <span className="font-bold">Maksym Akulov</span>. I&apos;m a software engineer based in
+            Ringebu,
+            Norway. I&apos;m passionate about building
+            software that solves real-world problems and improves people&apos;s lives.
           </p>
           <p className="font-light mt-2 mb-20">Feel free to reach out to me if you have any projects in mind,
             or just to say hello.</p>
@@ -98,7 +99,7 @@ export default function Home() {
       </Card>
       <Card themeColor={themeColor} className="md:col-span-1 md:row-span-5">
         <h2 className="text-xl font-bold">About me</h2>
-        <p className="text-sm mb-4">Hi, I'm Maksym, a front-end software developer from Ukraine. Currently in
+        <p className="text-sm mb-4">Hi, I&apos;m Maksym, a front-end software developer from Ukraine. Currently in
           Norway.</p>
         <p className="text-sm">My primary tools of choice includes:</p>
         <ul className="list-disc list-inside mb-2">
@@ -108,15 +109,15 @@ export default function Home() {
           <li>Typescript</li>
           <li>Tailwind css</li>
         </ul>
-        <p className="text-sm mb-2">Beyond coding, I'm passionate about design, illustration, animation and
+        <p className="text-sm mb-2">Beyond coding, I&apos;m passionate about design, illustration, animation and
           traveling.</p>
         <p className="text-sm">While I have some preferred tools, I always choose the best one for the job, even if
-          it's not on my usual list. My goal is to find the right solution for each project.</p>
+          it&apos;s not on my usual list. My goal is to find the right solution for each project.</p>
       </Card>
       <Slider themeColor={themeColor}
               className="min-w-full md:min-w-[auto] md:max-w-[245px] md:col-start-2 md:row-start-5"/>
       <Card themeColor={themeColor} className="md:col-start-2 md:row-start-6 md:max-w-[245px] md:row-span-4">
-        <h2 className="text-xl font-bold mb-4">Let's start working together!</h2>
+        <h2 className="text-xl font-bold mb-4">Let&apos;s start working together!</h2>
         <h6 className="text-sm text-darkslate-300 font-light">Contact details</h6>
         <a href="mailto:maxim.akulovka@gmail.com" className="font-light">maxim.akulovka@gmail.com</a>
         <p className="font-light text-sm mb-4">Norway</p>

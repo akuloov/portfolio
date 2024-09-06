@@ -2,7 +2,6 @@ import "./globals.css";
 import {Metadata} from "next";
 
 export const metadata: Metadata = {
-  title: 'Maksym Akulov',
   description: 'Maksym Akulov portfolio',
   icons: {
     icon: '/favicon.ico',
@@ -15,13 +14,15 @@ export default function RootLayout({
                                    }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const style = "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap";
   return (
     <html lang="en">
     <head>
+      <title>Maksym Akulov</title>
       <link rel="preconnect" href="https://fonts.googleapis.com"/>
       <link rel="preconnect" href="https://fonts.gstatic.com"/>
       <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+        href={style}
         rel="stylesheet"
       />
     </head>
