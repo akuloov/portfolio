@@ -19,8 +19,8 @@ import '../app/globals.css';
 import {EffectFlip, Pagination} from 'swiper/modules';
 import Image from "next/image";
 import {cva} from "class-variance-authority";
-import {ThemeColor} from "@/app/page";
 import {cn} from "@/utils/cn";
+import {ThemeColor} from "@/hooks/useThemeColor/useThemeColor";
 
 const variants = cva(
   "",

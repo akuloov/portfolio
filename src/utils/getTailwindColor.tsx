@@ -1,4 +1,4 @@
-import {ThemeColor} from "@/app/page";
+import {ThemeColor} from "@/hooks/useThemeColor";
 
 export default function getTailwindColor(themeColor: ThemeColor): string {
   const colorMap: { [key in ThemeColor]: string } = {

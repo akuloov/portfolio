@@ -1,6 +1,6 @@
 import {cn} from "@/utils/cn";
-import {ThemeColor} from "@/app/page";
 import {cva} from "class-variance-authority";
+import {ThemeColor} from "@/hooks/useThemeColor";
 
 interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -28,11 +28,11 @@ const variants = cva(
 
 const Card = ({className, children, themeColor, ...otherProps}: DivProps) => {
   return (
-    <div 
-      {...otherProps} 
+    <div
+      {...otherProps}
       className={cn(
-      variants({themeColor, className})
-    )}
+        variants({themeColor, className})
+      )}
     >
       {children}
     </div>

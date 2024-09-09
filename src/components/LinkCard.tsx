@@ -1,6 +1,6 @@
 import {cva} from "class-variance-authority";
-import {ThemeColor} from "@/app/page";
 import {cn} from "@/utils/cn";
+import {ThemeColor} from "@/hooks/useThemeColor";
 
 interface LinkProps extends React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement> {
   themeColor: ThemeColor;
