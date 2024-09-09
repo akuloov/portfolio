@@ -47,7 +47,8 @@ export default function Home() {
   return (
     <main
       className="grid gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full sm:p-4 md:p-6">
-      <Card themeColor={themeColor} className="flex md:pr-0 md:col-span-3 md:row-span-4">
+      <Card themeColor={themeColor}
+            className="flex md:pr-0 md:col-span-3 md:row-span-4 animate-fade-down animate-once animate-delay-200 animate-ease-in-out">
         <div className="flex flex-col">
           <h6 className="text-sm text-darkslate-300 font-light">welcome</h6>
           <p className="font-light">
@@ -97,7 +98,8 @@ export default function Home() {
                height={300}
         />
       </Card>
-      <Card themeColor={themeColor} className="md:col-span-1 md:row-span-5">
+      <Card themeColor={themeColor}
+            className="md:col-span-1 md:row-span-5 animate-fade-up md:animate-fade-right animate-once animate-delay-500 animate-ease-in-out">
         <h2 className="text-xl font-bold">About me</h2>
         <p className="text-sm mb-4">Hi, I&apos;m Maksym, a front-end software developer from Ukraine. Currently in
           Norway.</p>
@@ -115,8 +117,9 @@ export default function Home() {
           it&apos;s not on my usual list. My goal is to find the right solution for each project.</p>
       </Card>
       <Slider themeColor={themeColor}
-              className="min-w-full md:min-w-[auto] md:max-w-[245px] md:col-start-2 md:row-start-5"/>
-      <Card themeColor={themeColor} className="md:col-start-2 md:row-start-6 md:max-w-[245px] md:row-span-4">
+              className="min-w-full md:min-w-[auto] md:max-w-[245px] md:col-start-2 md:row-start-5 animate-fade-up animate-once animate-delay-[800ms] md:animate-delay-1000 animate-ease-in-out"/>
+      <Card themeColor={themeColor}
+            className="md:col-start-2 md:row-start-6 md:max-w-[245px] md:row-span-4 animate-fade-up animate-once animate-delay-[1100ms] md:animate-delay-[1600ms] animate-ease-in-out">
         <h2 className="text-xl font-bold mb-4">Let&apos;s start working together!</h2>
         <h6 className="text-sm text-darkslate-300 font-light">Contact details</h6>
         <a href="mailto:maxim.akulovka@gmail.com" className="font-light">maxim.akulovka@gmail.com</a>
@@ -134,7 +137,8 @@ export default function Home() {
              className="font-light w-fit">Discord</a>
         </div>
       </Card>
-      <Card themeColor={themeColor} className="font-light">
+      <Card themeColor={themeColor}
+            className="font-light animate-fade-up md:animate-fade-left animate-once animate-delay-[1400ms] md:animate-delay-[1300ms] animate-ease-in-out">
               <span className="absolute right-3 top-3 flex h-3 w-3">
                 <span
                   className="animate-ping absolute inline-flex h-full w-full rounded-full bg-ThemeGreen opacity-75"></span>
@@ -142,11 +146,13 @@ export default function Home() {
               </span>
         Currently practiсing at <a href="https://abaris.no/" target="_blank" className="font-bold">Abaris</a>
       </Card>
-      <Card themeColor={themeColor} className="flex flex-col justify-center items-center md:col-start-3 md:row-start-5">
+      <Card themeColor={themeColor}
+            className="flex flex-col justify-center items-center md:col-start-3 md:row-start-5 animate-fade-up md:animate-fade-left animate-once animate-delay-[1700ms] md:animate-delay-[800ms] animate-ease-in-out">
         <h6 className="font-bold">Your local time</h6>
         <div className="text-xl italic font-extralight">{currentTime}</div>
       </Card>
-      <Card themeColor={themeColor} className="p-3 flex items-center justify-between h-20">
+      <Card themeColor={themeColor}
+            className="p-3 flex items-center justify-between h-20 animate-fade-up md:animate-fade-left animate-once animate-delay-[2000ms] md:animate-delay-[1900ms] animate-ease-in-out">
         <div className="w-10 h-10 rounded-full cursor-pointer bg-ThemeRed"
              onClick={() => setThemeColor("ThemeRed")}></div>
         <div className="w-10 h-10 rounded-full cursor-pointer bg-ThemeBlue"
@@ -158,7 +164,8 @@ export default function Home() {
         <div className="w-10 h-10 rounded-full cursor-pointer bg-ThemePurple"
              onClick={() => setThemeColor("ThemePurple")}></div>
       </Card>
-      <Card themeColor={themeColor} className="text-sm md:row-span-2">
+      <Card themeColor={themeColor}
+            className="text-sm md:row-span-2 animate-fade-up md:animate-fade-left animate-once animate-delay-[2300ms] md:animate-delay-[2200ms] animate-ease-in-out">
         © 2024 · Crafted with ♥️ using Next JS by Maksym Akulov.
       </Card>
     </main>
