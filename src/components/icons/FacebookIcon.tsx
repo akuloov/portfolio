@@ -1,4 +1,4 @@
-import {ThemeColor} from "@/app/page";
+import {ThemeColor} from "@/hooks/useThemeColor";
 import getTailwindColor from "@/utils/getTailwindColor";
 
 export default function FacebookIcon({
