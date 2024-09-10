@@ -1,6 +1,6 @@
 import {cva} from "class-variance-authority";
-import {ThemeColor} from "@/hooks/useThemeColor";
 import {cn} from "@/utils/cn";
+import {ThemeColor} from "@/types/ThemeColorType";
 
 interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;

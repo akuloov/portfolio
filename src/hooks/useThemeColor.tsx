@@ -1,5 +1,5 @@
 import {useState} from "react";
-export type ThemeColor = "ThemeRed" | "ThemeBlue" | "ThemeGreen" | "ThemeYellow" | "ThemePurple";
+import {ThemeColor} from "@/types/ThemeColorType";
 
 export default function useThemeColor() {
   const [themeColor, setThemeColor] = useState<ThemeColor>("ThemeBlue");

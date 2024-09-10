@@ -1,5 +1,5 @@
-import {ThemeColor} from "@/hooks/useThemeColor";
 import getTailwindColor from "@/utils/getTailwindColor";
+import {ThemeColor} from "@/types/ThemeColorType";
 
 export default function FacebookIcon({
                                      height = "20",

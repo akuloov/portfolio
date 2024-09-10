@@ -1,5 +1,5 @@
 import getTailwindColor from "@/utils/getTailwindColor";
-import {ThemeColor} from "@/hooks/useThemeColor";
+import {ThemeColor} from "@/types/ThemeColorType";
 
 export default function GameIcon({
                                    height = "20",

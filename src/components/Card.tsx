@@ -1,6 +1,6 @@
 import {cn} from "@/utils/cn";
 import {cva} from "class-variance-authority";
-import {ThemeColor} from "@/hooks/useThemeColor";
+import {ThemeColor} from "@/types/ThemeColorType";
 
 interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

@@ -1,4 +1,5 @@
-import {ThemeColor} from "@/hooks/useThemeColor";
+import {ThemeColor} from "@/types/ThemeColorType";
+
 
 export default function getTailwindColor(themeColor: ThemeColor): string {
   const colorMap: { [key in ThemeColor]: string } = {

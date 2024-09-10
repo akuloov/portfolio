@@ -20,7 +20,7 @@ import {EffectFlip, Pagination} from 'swiper/modules';
 import Image from "next/image";
 import {cva} from "class-variance-authority";
 import {cn} from "@/utils/cn";
-import {ThemeColor} from "@/hooks/useThemeColor";
+import {ThemeColor} from "@/types/ThemeColorType";
 
 const variants = cva(
   "",
