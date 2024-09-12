@@ -41,15 +41,16 @@ export default function Home() {
   const handleMouseUp = () => {
     setIsClicked(false);
   }
-  
+
   return (
     <ThemeModeContext.Provider value={theme}>
       <main
-        className={cn("grid gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full sm:p-4 md:p-6", {"bg-white md:rounded-xl": theme === "light"})}>
+        className={cn("grid gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4", {"bg-white md:rounded-xl": theme === "light"})}>
         <Card themeColor={themeColor}
               className="flex md:pr-0 md:col-span-3 md:row-span-4 animate-fade-down animate-once animate-delay-200 animate-ease-in-out">
           <div className="flex flex-col">
-            <h6 className="text-sm text-darkslate-300 font-light">welcome</h6>
+            {/*<h6 className="text-sm text-darkslate-300 font-light">welcome</h6>*/}
+            <h2 className="text-xl font-bold">welcome</h2>
             <p className="font-light">
               Hi, I&apos;m <span className="font-bold">Maksym Akulov</span>. I&apos;m a software engineer based in
               Ringebu,
@@ -124,22 +125,22 @@ export default function Home() {
         <Card themeColor={themeColor}
               className="md:col-start-2 md:row-start-6 md:max-w-[245px] md:row-span-4 animate-fade-up animate-once animate-delay-[1100ms] md:animate-delay-[1600ms] animate-ease-in-out">
           <h2 className="text-xl font-bold mb-4">Let&apos;s start working together!</h2>
-          <h6 className="text-sm text-darkslate-300 font-light">Contact details</h6>
+          {/*<h6 className="text-sm text-darkslate-300 font-light">Contact details</h6>*/}
           <a href="mailto:maxim.akulovka@gmail.com" className="font-light">maxim.akulovka@gmail.com</a>
           <p className="font-light text-sm mb-4">Norway</p>
           <h2 className="text-xl font-bold">Socials</h2>
           <div className="flex flex-col">
             <a href="https://github.com/akuloov"
                target="_blank"
-               className="font-light w-fit flex items-center gap-1">Github<LinkIcon
+               className="font-light w-fit flex items-center gap-1 hover:opacity-70 transition-all">Github<LinkIcon
               color={theme}/></a>
             <a href="https://www.facebook.com/profile.php?id=100048220174173"
                target="_blank"
-               className="font-light w-fit flex items-center gap-1">Facebook<LinkIcon
+               className="font-light w-fit flex items-center gap-1 hover:opacity-70 transition-all">Facebook<LinkIcon
               color={theme}/></a>
             <a href="https://discordapp.com/users/539807215264202775/"
                target="_blank"
-               className="font-light w-fit flex items-center gap-1">Discord<LinkIcon
+               className="font-light w-fit flex items-center gap-1 hover:opacity-70 transition-all">Discord<LinkIcon
               color={theme}/></a>
           </div>
         </Card>
@@ -152,7 +153,7 @@ export default function Home() {
               </span>
           <div className="flex items-center gap-1 md:flex-col min-[874px]:flex-row">
             Currently practiсing at <a href="https://abaris.no/" target="_blank"
-                                       className="font-bold w-fit flex items-center gap-1">Abaris<LinkIcon
+                                       className="font-bold w-fit flex items-center gap-1 hover:opacity-70 transition-all">Abaris<LinkIcon
             color={theme}/></a>
           </div>
         </Card>
@@ -175,7 +176,7 @@ export default function Home() {
                onClick={() => setThemeColor("ThemePurple")}></div>
         </Card>
         <Card themeColor={themeColor}
-              className="text-sm md:row-span-2 animate-fade-up md:animate-fade-left animate-once animate-delay-[2300ms] md:animate-delay-[2200ms] animate-ease-in-out">
+              className="flex items-center justify-center text-sm md:row-span-2 animate-fade-up md:animate-fade-left animate-once animate-delay-[2300ms] md:animate-delay-[2200ms] animate-ease-in-out">
           © 2024 · Crafted with ♥️ using Next JS by Maksym Akulov.
         </Card>
       </main>

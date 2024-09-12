@@ -47,7 +47,10 @@ const messageVariants = cva(
 const LinkCard = ({themeColor, className, message, ...otherProps}: LinkProps) => {
   return (
     <a {...otherProps}
-       className={cn(variants({themeColor, className}), message && messageVariants({themeColor}))}
+       className={cn("hover:opacity-70 transition-all", variants({
+         themeColor,
+         className
+       }), message && messageVariants({themeColor}))}
     />
   )
 }
