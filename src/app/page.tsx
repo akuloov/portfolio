@@ -16,6 +16,7 @@ import ThemeIcon from "@/components/icons/ThemeIcon";
 import {ThemeModeContext} from "@/providers/ThemeModeProvider";
 import {ThemeMode} from "@/types/ThemeModeType";
 import {cn} from "@/utils/cn";
+import LinkIcon from "@/components/icons/LinkIcon";
 
 
 export default function Home() {
@@ -130,23 +131,30 @@ export default function Home() {
           <div className="flex flex-col">
             <a href="https://github.com/akuloov"
                target="_blank"
-               className="font-light w-fit">Github</a>
+               className="font-light w-fit flex items-center gap-1">Github<LinkIcon
+              color={theme}/></a>
             <a href="https://www.facebook.com/profile.php?id=100048220174173"
                target="_blank"
-               className="font-light w-fit">Facebook</a>
+               className="font-light w-fit flex items-center gap-1">Facebook<LinkIcon
+              color={theme}/></a>
             <a href="https://discordapp.com/users/539807215264202775/"
                target="_blank"
-               className="font-light w-fit">Discord</a>
+               className="font-light w-fit flex items-center gap-1">Discord<LinkIcon
+              color={theme}/></a>
           </div>
         </Card>
         <Card themeColor={themeColor}
-              className="font-light animate-fade-up md:animate-fade-left animate-once animate-delay-[1400ms] md:animate-delay-[1300ms] animate-ease-in-out text-center">
+              className="font-light flex items-center justify-center animate-fade-up md:animate-fade-left animate-once animate-delay-[1400ms] md:animate-delay-[1300ms] animate-ease-in-out text-center">
               <span className="absolute right-3 top-3 flex h-3 w-3">
                 <span
-                  className="animate-ping absolute inline-flex h-full w-full rounded-full bg-ThemeGreen opacity-75"></span>
+                  className="animate-ping animate-infinite absolute inline-flex h-full w-full rounded-full bg-ThemeGreen opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-ThemeGreen"></span>
               </span>
-          Currently practiсing at <a href="https://abaris.no/" target="_blank" className="font-bold">Abaris</a>
+          <div className="flex items-center gap-1 md:flex-col min-[874px]:flex-row">
+            Currently practiсing at <a href="https://abaris.no/" target="_blank"
+                                       className="font-bold w-fit flex items-center gap-1">Abaris<LinkIcon
+            color={theme}/></a>
+          </div>
         </Card>
         <Card themeColor={themeColor}
               className="flex flex-col justify-center items-center md:col-start-3 md:row-start-5 animate-fade-up md:animate-fade-left animate-once animate-delay-[1700ms] md:animate-delay-[800ms] animate-ease-in-out">
