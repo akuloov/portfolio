@@ -1,6 +1,8 @@
 import {cn} from "@/utils/cn";
 import {cva} from "class-variance-authority";
 import {ThemeColor} from "@/types/ThemeColorType";
+import {useContext} from "react";
+import {ThemeModeContext} from "@/providers/ThemeModeProvider";
 
 interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -27,11 +29,12 @@ const variants = cva(
 )
 
 const Card = ({className, children, themeColor, ...otherProps}: DivProps) => {
+  const themeMode = useContext(ThemeModeContext);
   return (
     <div
       {...otherProps}
       className={cn(
-        variants({themeColor, className})
+        variants({themeColor, className}), {"bg-white text-black": themeMode === "light"}
       )}
     >
       {children}

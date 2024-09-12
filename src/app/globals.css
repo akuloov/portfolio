@@ -50,11 +50,6 @@ body:before {
     justify-content: center !important;
     background-position: center !important;
     background-size: cover !important;
-    background-color: #171717;
     border-radius: 0.5rem;
     border: solid 1px #383838;
-}
-
-.swiper-pagination-bullet {
-    background-color: #fff !important;
 }
