@@ -5,7 +5,7 @@ import GithubIcon from "@/components/icons/GithubIcon";
 import Image from "next/image";
 import avatar from "../../public/avatar.webp";
 import LinkCard from "@/components/LinkCard";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import FacebookIcon from "@/components/icons/FacebookIcon";
 import MailIcon from "@/components/icons/MailIcon";
 import Slider from "@/components/Slider";
@@ -24,7 +24,16 @@ export default function Home() {
   const {currentTime} = useGetCurrentTime();
   const [phraseIndex, setPhraseIndex] = useState<number>(0);
   const [isClicked, setIsClicked] = useState<boolean>(false);
-  const [theme, setTheme] = useState<ThemeMode>("dark");
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("theme") as ThemeMode) || "dark";
+    }
+    return "dark";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const phrases = ["", "Clicked again?", "Still here?", "Persistent, aren't you?", "What's up?", "Again?", "Really?", "You're curious!", "Not cool!", "Give it a break", "That's annoying!", "Hands off!!!", "No more clicks!", "Seriously?!", "Ouch! That hurts!", "Why the curiosity?", "I got tired!", "I'm bored!", "Find another hobby!", "Stop, please!", "Enough!", "Stop it!", "I'm out of phrases!"];
 
