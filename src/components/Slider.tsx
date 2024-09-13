@@ -63,7 +63,7 @@ export default function Slider(
           <a href="https://react.dev/" target="_blank"
              className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
             <h1>React</h1>
-            <LinkIcon color={themeMode}/>
+            <LinkIcon color={themeMode} width="16" height="16"/>
           </a>
           <Image src={react} alt="react" width={200}/>
         </SwiperSlide>
@@ -72,7 +72,7 @@ export default function Slider(
           <a href="https://nextjs.org/" target="_blank"
              className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
             <h1>Next JS</h1>
-            <LinkIcon color={themeMode}/>
+            <LinkIcon color={themeMode} width="16" height="16"/>
           </a>
           <Image src={next} alt="nextjs" width={200}/>
         </SwiperSlide>
@@ -81,7 +81,7 @@ export default function Slider(
           <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"
              className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
             <h1>Javascript</h1>
-            <LinkIcon color={themeMode}/>
+            <LinkIcon color={themeMode} width="16" height="16"/>
           </a>
           <Image src={js} alt="javascript" width={200}/>
         </SwiperSlide>
@@ -90,7 +90,7 @@ export default function Slider(
           <a href="https://www.typescriptlang.org/" target="_blank"
              className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
             <h1>Typescript</h1>
-            <LinkIcon color={themeMode}/>
+            <LinkIcon color={themeMode} width="16" height="16"/>
           </a>
           <Image src={ts} alt="typescript" width={200}/>
         </SwiperSlide>
@@ -99,7 +99,7 @@ export default function Slider(
           <a href="https://tailwindcss.com/" target="_blank"
              className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
             <h1>Tailwind css</h1>
-            <LinkIcon color={themeMode}/>
+            <LinkIcon color={themeMode} width="16" height="16"/>
           </a>
           <Image src={tailwind} alt="tailwind" width={200}/>
         </SwiperSlide>

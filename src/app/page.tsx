@@ -126,22 +126,23 @@ export default function Home() {
               className="md:col-start-2 md:row-start-6 md:max-w-[245px] md:row-span-4 animate-fade-up animate-once animate-delay-[1100ms] md:animate-delay-[1600ms] animate-ease-in-out">
           <h2 className="text-xl font-bold mb-4">Let&apos;s start working together!</h2>
           {/*<h6 className="text-sm text-darkslate-300 font-light">Contact details</h6>*/}
-          <a href="mailto:maxim.akulovka@gmail.com" className="font-light">maxim.akulovka@gmail.com</a>
+          <a href="mailto:maxim.akulovka@gmail.com"
+             className="font-light hover:opacity-70 transition-all">maxim.akulovka@gmail.com</a>
           <p className="font-light text-sm mb-4">Norway</p>
           <h2 className="text-xl font-bold">Socials</h2>
           <div className="flex flex-col">
             <a href="https://github.com/akuloov"
                target="_blank"
                className="font-light w-fit flex items-center gap-1 hover:opacity-70 transition-all">Github<LinkIcon
-              color={theme}/></a>
+              color={theme} width="16" height="16"/></a>
             <a href="https://www.facebook.com/profile.php?id=100048220174173"
                target="_blank"
                className="font-light w-fit flex items-center gap-1 hover:opacity-70 transition-all">Facebook<LinkIcon
-              color={theme}/></a>
+              color={theme} width="16" height="16"/></a>
             <a href="https://discordapp.com/users/539807215264202775/"
                target="_blank"
                className="font-light w-fit flex items-center gap-1 hover:opacity-70 transition-all">Discord<LinkIcon
-              color={theme}/></a>
+              color={theme} width="16" height="16"/></a>
           </div>
         </Card>
         <Card themeColor={themeColor}
@@ -154,7 +155,7 @@ export default function Home() {
           <div className="flex items-center gap-1 md:flex-col min-[874px]:flex-row">
             Currently practiсing at <a href="https://abaris.no/" target="_blank"
                                        className="font-bold w-fit flex items-center gap-1 hover:opacity-70 transition-all">Abaris<LinkIcon
-            color={theme}/></a>
+            color={theme} width="16" height="16"/></a>
           </div>
         </Card>
         <Card themeColor={themeColor}
