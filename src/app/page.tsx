@@ -11,17 +11,16 @@ import MailIcon from "@/components/icons/MailIcon";
 import Slider from "@/components/Slider";
 import GameIcon from "@/components/icons/GameIcon";
 import useThemeColor from "@/hooks/useThemeColor";
-import useGetCurrentTime from "@/hooks/useGetCurrentTime";
 import ThemeIcon from "@/components/icons/ThemeIcon";
 import {ThemeModeContext} from "@/providers/ThemeModeProvider";
 import {ThemeMode} from "@/types/ThemeModeType";
 import {cn} from "@/utils/cn";
 import LinkIcon from "@/components/icons/LinkIcon";
 
+import CurrentTime from "@/components/CurrentTime";
 
 export default function Home() {
   const {themeColor, setThemeColor} = useThemeColor();
-  const {currentTime} = useGetCurrentTime();
   const [phraseIndex, setPhraseIndex] = useState<number>(0);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [theme, setTheme] = useState<ThemeMode>(() => {
@@ -191,5 +190,6 @@ export default function Home() {
         </Card>
       </main>
     </ThemeModeContext.Provider>
+        <CurrentTime/>
   );
 }
