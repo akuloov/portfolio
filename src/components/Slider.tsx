@@ -20,9 +20,8 @@ import Image from "next/image";
 import {cva} from "class-variance-authority";
 import {cn} from "@/utils/cn";
 import {ThemeColor} from "@/types/ThemeColorType";
-import {useContext} from "react";
-import {ThemeModeContext} from "@/providers/ThemeModeProvider";
 import LinkIcon from "@/components/icons/LinkIcon";
+import useStore from "@/app/stateStorage/storage";
 
 const variants = cva(
   "",
@@ -48,7 +47,7 @@ export default function Slider(
       themeColor: ThemeColor,
       className?: string
     }) {
-  const themeMode = useContext(ThemeModeContext);
+  const darkMode = useStore((state) => state.darkMode);
   return (
     <>
       <Swiper
@@ -59,53 +58,53 @@ export default function Slider(
         pagination={{clickable: true}}
       >
         <SwiperSlide
-          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": themeMode === "light"})}>
+          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
           <a href="https://react.dev/" target="_blank"
              className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
             <h1>React</h1>
-            <LinkIcon color={themeMode} width="16" height="16"/>
+            <LinkIcon color={darkMode} width="16" height="16"/>
           </a>
           <Image src={react} alt="react" width={200}/>
         </SwiperSlide>
         <SwiperSlide
-          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": themeMode === "light"})}>
+          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
           <a href="https://nextjs.org/" target="_blank"
              className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
             <h1>Next JS</h1>
-            <LinkIcon color={themeMode} width="16" height="16"/>
+            <LinkIcon color={darkMode} width="16" height="16"/>
           </a>
           <Image src={next} alt="nextjs" width={200}/>
         </SwiperSlide>
         <SwiperSlide
-          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": themeMode === "light"})}>
+          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
           <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"
              className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
             <h1>Javascript</h1>
-            <LinkIcon color={themeMode} width="16" height="16"/>
+            <LinkIcon color={darkMode} width="16" height="16"/>
           </a>
           <Image src={js} alt="javascript" width={200}/>
         </SwiperSlide>
         <SwiperSlide
-          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": themeMode === "light"})}>
+          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
           <a href="https://www.typescriptlang.org/" target="_blank"
              className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
             <h1>Typescript</h1>
-            <LinkIcon color={themeMode} width="16" height="16"/>
+            <LinkIcon color={darkMode} width="16" height="16"/>
           </a>
           <Image src={ts} alt="typescript" width={200}/>
         </SwiperSlide>
         <SwiperSlide
-          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": themeMode === "light"})}>
+          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
           <a href="https://tailwindcss.com/" target="_blank"
              className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
             <h1>Tailwind css</h1>
-            <LinkIcon color={themeMode} width="16" height="16"/>
+            <LinkIcon color={darkMode} width="16" height="16"/>
           </a>
           <Image src={tailwind} alt="tailwind" width={200}/>
         </SwiperSlide>
       </Swiper>
       {
-        themeMode === "dark" &&
+        darkMode &&
           <style>{`
           .swiper-pagination-bullet {
               background-color: white !important;

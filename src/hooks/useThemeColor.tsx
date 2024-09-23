@@ -1,8 +1,23 @@
-import {useState} from "react";
+import useStore from "@/app/stateStorage/storage";
 import {ThemeColor} from "@/types/ThemeColorType";
+import {useCallback, useEffect} from "react";
 
 export default function useThemeColor() {
-  const [themeColor, setThemeColor] = useState<ThemeColor>("ThemeBlue");
+  const themeColor = useStore((state) => state.themeColor)
+  const setThemeColorToStore = useStore((state) => state.setThemeColor);
+
+  useEffect(() => {
+    const storedThemeColor = localStorage.getItem('themeColor') as ThemeColor;
+    if (storedThemeColor) {
+      setThemeColorToStore(storedThemeColor);
+    }
+  }, []);
+
+  const setThemeColor = useCallback((newThemeColor: ThemeColor) => {
+    setThemeColorToStore(newThemeColor);
+    localStorage.setItem('themeColor', newThemeColor);
+  }, [setThemeColorToStore]);
+
   return {
     themeColor,
     setThemeColor,
