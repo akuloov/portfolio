@@ -1,11 +1,14 @@
 import {cva} from "class-variance-authority";
 import {cn} from "@/utils/cn";
 import {ThemeColor} from "@/types/ThemeColorType";
+import {DetailedHTMLProps, HTMLAttributes} from "react";
 
-interface LinkProps extends React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement> {
+interface LinkProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   themeColor: ThemeColor;
   className?: string;
   message?: boolean;
+  href?: string;
+  target?: string;
 }
 
 const variants = cva(
@@ -44,14 +47,24 @@ const messageVariants = cva(
   }
 )
 
-const LinkCard = ({themeColor, className, message, ...otherProps}: LinkProps) => {
-  return (
-    <a {...otherProps}
-       className={cn("hover:opacity-70 transition-all", variants({
-         themeColor,
-         className
-       }), message && messageVariants({themeColor}))}
+const LinkCard = ({themeColor, className, message, href, target, ...otherProps}: LinkProps) => {
+  return href ? (
+      <a
+        className={cn("hover:opacity-70 transition-all", variants({
+          themeColor,
+          className
+        }), message && messageVariants({themeColor}))}
+        href={href}
+        target={target}
+      >
+        {otherProps.children}
+      </a>
+    ) :
+    <div {...otherProps}
+         className={cn("hover:opacity-70 transition-all", variants({
+           themeColor,
+           className
+         }), message && messageVariants({themeColor}))}
     />
-  )
 }
 export default LinkCard;
