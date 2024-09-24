@@ -11,6 +11,7 @@ export default function useThemeColor() {
     if (storedThemeColor) {
       setThemeColorToStore(storedThemeColor);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setThemeColor = useCallback((newThemeColor: ThemeColor) => {

@@ -5,7 +5,7 @@ import GithubIcon from "@/components/icons/GithubIcon";
 import Image from "next/image";
 import avatar from "../../public/avatar.webp";
 import LinkCard from "@/components/LinkCard";
-import {useEffect, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 import FacebookIcon from "@/components/icons/FacebookIcon";
 import MailIcon from "@/components/icons/MailIcon";
 import Slider from "@/components/Slider";
@@ -24,9 +24,9 @@ export default function Home() {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const {darkMode, toggleDarkMode} = useDarkMode();
 
-  const phrases = ["", "Clicked again?", "Still here?", "Persistent, aren't you?", "What's up?", "Again?", "Really?", "You're curious!", "Not cool!", "Give it a break", "That's annoying!", "Hands off!!!", "No more clicks!", "Seriously?!", "Ouch! That hurts!", "Why the curiosity?", "I got tired!", "I'm bored!", "Find another hobby!", "Stop, please!", "Enough!", "Stop it!", "I'm out of phrases!"];
+  const phrases = useMemo(() => ["", "Clicked again?", "Still here?", "Persistent, aren't you?", "What's up?", "Again?", "Really?", "You're curious!", "Not cool!", "Give it a break", "That's annoying!", "Hands off!!!", "No more clicks!", "Seriously?!", "Ouch! That hurts!", "Why the curiosity?", "I got tired!", "I'm bored!", "Find another hobby!", "Stop, please!", "Enough!", "Stop it!", "I'm out of phrases!"], []);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     setPhraseIndex((prevIndex) => {
       if (prevIndex >= phrases.length - 1) {
         return phrases.length - 1; // Stay at the last phrase
@@ -34,11 +34,12 @@ export default function Home() {
       return prevIndex + 1;
     });
     setIsClicked(true);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     setIsClicked(false);
-  }
+  }, []);
 
   return (
     <ThemeModeContext.Provider value={theme}>
