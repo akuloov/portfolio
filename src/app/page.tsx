@@ -103,7 +103,7 @@ export default function Home() {
             className="md:col-span-1 md:row-span-6 animate-fade-up md:animate-fade-right animate-once animate-delay-500 animate-ease-in-out">
         <h2 className="text-xl font-bold">About me</h2>
         <p className="text-sm mb-4">Hi, I&apos;m Maksym, a front-end software developer from Ukraine. Currently in
-          Norway.</p>
+          Norway. I have a bachelor&apos;s degree in software engineering.</p>
         <p className="text-sm">My primary tools of choice includes:</p>
         <ul className="list-disc list-inside mb-2">
           <li>React</li>
