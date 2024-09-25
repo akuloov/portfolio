@@ -10,6 +10,7 @@ import todoApp from "../../../public/todoApp.png";
 import petStoreApp from "../../../public/petStoreApp.png";
 import personalWebsite from "../../../public/personalWebsite.png";
 import honeyStore from "../../../public/honeyStore.png";
+import todoReactApp from "../../../public/todoReactApp.png";
 import LinkIcon from "@/components/icons/LinkIcon";
 import useDarkMode from "@/hooks/useDarkMode";
 import {WorkExampleType} from "@/types/WorkExampleType";
@@ -119,6 +120,26 @@ const Works = () => {
         alt: "Landing page",
       },
       animateClassName: "animate-delay-[1200ms]",
+    },
+    {
+      title: "TODO app",
+      description: "This is an another TODO app, but created using only React JS",
+      technologies: ["React JS"],
+      projectLinks: [
+        {
+          name: "Github repository",
+          link: "https://github.com/akuloov/Todo-App-React-JS",
+        },
+        {
+          name: "Live Demo",
+          link: "https://akuloov.github.io/Todo-App-React-JS/build/index.html",
+        }
+      ],
+      image: {
+        src: todoReactApp,
+        alt: "TODO app",
+      },
+      animateClassName: "animate-delay-[1500ms]",
     },
   ], []);
   return (
