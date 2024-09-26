@@ -22,6 +22,8 @@ import {cn} from "@/utils/cn";
 import {ThemeColor} from "@/types/ThemeColorType";
 import LinkIcon from "@/components/icons/LinkIcon";
 import useStore from "@/app/stateStorage/storage";
+import {useMemo} from "react";
+import {SlideType} from "@/types/SlideType";
 
 const variants = cva(
   "",
@@ -48,6 +50,35 @@ export default function Slider(
       className?: string
     }) {
   const darkMode = useStore((state) => state.darkMode);
+
+  const slides: SlideType[] = useMemo(() => [
+    {
+      title: "React",
+      href: "https://react.dev/",
+      image: {src: react, alt: "react"},
+    },
+    {
+      title: "Next JS",
+      href: "https://nextjs.org/",
+      image: {src: next, alt: "nextjs"},
+    },
+    {
+      title: "Javascript",
+      href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+      image: {src: js, alt: "javascript"},
+    },
+    {
+      title: "Typescript",
+      href: "https://www.typescriptlang.org/",
+      image: {src: ts, alt: "typescript"},
+    },
+    {
+      title: "Tailwind css",
+      href: "https://tailwindcss.com/",
+      image: {src: tailwind, alt: "tailwind"},
+    },
+  ], []);
+
   return (
     <>
       <Swiper
@@ -57,51 +88,18 @@ export default function Slider(
         className={cn("mySwiper max-w-[305px]", className)}
         pagination={{clickable: true}}
       >
-        <SwiperSlide
-          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
-          <a href="https://react.dev/" target="_blank"
-             className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
-            <h1>React</h1>
-            <LinkIcon color={darkMode} width="16" height="16"/>
-          </a>
-          <Image src={react} alt="react" width={200}/>
-        </SwiperSlide>
-        <SwiperSlide
-          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
-          <a href="https://nextjs.org/" target="_blank"
-             className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
-            <h1>Next JS</h1>
-            <LinkIcon color={darkMode} width="16" height="16"/>
-          </a>
-          <Image src={next} alt="nextjs" width={200}/>
-        </SwiperSlide>
-        <SwiperSlide
-          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
-          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"
-             className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
-            <h1>Javascript</h1>
-            <LinkIcon color={darkMode} width="16" height="16"/>
-          </a>
-          <Image src={js} alt="javascript" width={200}/>
-        </SwiperSlide>
-        <SwiperSlide
-          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
-          <a href="https://www.typescriptlang.org/" target="_blank"
-             className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
-            <h1>Typescript</h1>
-            <LinkIcon color={darkMode} width="16" height="16"/>
-          </a>
-          <Image src={ts} alt="typescript" width={200}/>
-        </SwiperSlide>
-        <SwiperSlide
-          className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
-          <a href="https://tailwindcss.com/" target="_blank"
-             className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
-            <h1>Tailwind css</h1>
-            <LinkIcon color={darkMode} width="16" height="16"/>
-          </a>
-          <Image src={tailwind} alt="tailwind" width={200}/>
-        </SwiperSlide>
+        {slides.map((slide, index) => (
+          <SwiperSlide
+            key={index}
+            className={cn("bg-darkslate-500", variants({themeColor}), {"bg-white text-black": !darkMode})}>
+            <a href={slide.href} target="_blank"
+               className="flex items-center gap-2 mb-4 text-xl font-bold hover:opacity-70 transition-all">
+              <h1>{slide.title}</h1>
+              <LinkIcon color={darkMode} width="16" height="16"/>
+            </a>
+            <Image src={slide.image.src} alt={slide.image.alt} width={200}/>
+          </SwiperSlide>
+        ))}
       </Swiper>
       {
         darkMode &&
