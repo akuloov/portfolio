@@ -152,9 +152,9 @@ const Works = () => {
       </Link>
       {workExamples.map((workExample, index) => (
         <Card themeColor={themeColor}
-              className={cn("flex flex-col items-center sm:items-start sm:flex-row mt-6 animate-fade-up md:animate-fade-left animate-once animate-ease-in-out p-4 sm:p-6 h-full", workExample.animateClassName)}
+              className={cn("flex flex-col items-center sm:items-start sm:flex-row mt-6 animate-fade-up md:animate-fade-left animate-once animate-ease-in-out p-4 sm:p-6 h-full sm:justify-between sm:gap-4", workExample.animateClassName)}
               key={index}>
-          <div className="flex flex-col justify-between gap-2 w-full sm:min-h-[400px]">
+          <div className="flex flex-col justify-between gap-2 mr-auto sm:mr-0 sm:min-h-[400px]">
             <div className="flex flex-col w-full">
               <h2 className="text-xl font-bold">{workExample.title}</h2>
               <p className="font-light mb-4 text-sm">{workExample.description}</p>
@@ -180,7 +180,8 @@ const Works = () => {
               ))}
             </div>
           </div>
-          <Image src={workExample.image.src} className="rounded w-[300px] h-[400px]" alt={workExample.image.alt}/>
+          <Image src={workExample.image.src} className="rounded min-w-[300px] max-w-[300px] h-[400px]"
+                 alt={workExample.image.alt}/>
         </Card>
       ))}
     </main>
