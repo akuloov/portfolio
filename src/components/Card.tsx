@@ -1,7 +1,7 @@
 import {cn} from "@/utils/cn";
 import {cva} from "class-variance-authority";
 import {ThemeColor} from "@/types/ThemeColorType";
-import useStore from "@/app/stateStorage/storage";
+import useStore from "@/stateStorage/storage";
 
 interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

@@ -1,6 +1,6 @@
 import getTailwindColor from "@/utils/getTailwindColor";
 import {ThemeColor} from "@/types/ThemeColorType";
-import useStore from "@/app/stateStorage/storage";
+import useStore from "@/stateStorage/storage";
 
 export default function ThemeIcon({
                                     height = "20",

@@ -1,4 +1,4 @@
-import useStore from "@/app/stateStorage/storage";
+import useStore from "@/stateStorage/storage";
 import {useCallback, useEffect} from "react";
 
 export default function useDarkMode() {

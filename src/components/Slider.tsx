@@ -21,7 +21,7 @@ import {cva} from "class-variance-authority";
 import {cn} from "@/utils/cn";
 import {ThemeColor} from "@/types/ThemeColorType";
 import LinkIcon from "@/components/icons/LinkIcon";
-import useStore from "@/app/stateStorage/storage";
+import useStore from "@/stateStorage/storage";
 import {useMemo} from "react";
 import {SlideType} from "@/types/SlideType";
 
