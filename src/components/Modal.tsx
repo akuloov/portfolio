@@ -2,13 +2,13 @@ import {ModalType} from "@/types/ModalType";
 import {cn} from "@/utils/cn";
 import useDarkMode from "@/hooks/useDarkMode";
 import {useQuery} from "@tanstack/react-query";
-import {UNSPLASH_URL} from "@/constants/constants";
 import Image from "next/image";
 import {UnsplashDataType} from "@/types/UnsplashDataType";
 import SkeletonModal from "@/components/SkeletonModal";
 
 const Modal: React.FC<ModalType> = ({show, onClose, children, text}) => {
   const {darkMode} = useDarkMode();
+  const UNSPLASH_URL = process.env.NEXT_PUBLIC_UNSPLASH_URL;
 
   const {isLoading, data} = useQuery<UnsplashDataType>({
     queryKey: ['repoData', text],

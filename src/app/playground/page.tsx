@@ -1,7 +1,6 @@
 "use client"
 
 import {useQuery} from "@tanstack/react-query";
-import {BORED_URL} from "@/constants/constants";
 import {BoredDataType} from "@/types/BoredDataType";
 import useDarkMode from "@/hooks/useDarkMode";
 import useThemeColor from "@/hooks/useThemeColor";
@@ -17,14 +16,16 @@ const Playground = () => {
   const {themeColor} = useThemeColor();
 
   const [showModal, setShowModal] = useState(false);
+  
+  const BORED_URL = process.env.NEXT_PUBLIC_BORED_URL;
 
   const {isLoading, data, isFetching, refetch} = useQuery({
     queryKey: ['repoData'],
     queryFn: () =>
-      fetch(BORED_URL).then((res) =>
+      fetch(BORED_URL!).then((res) =>
         res.json(),
       ),
-    enabled: false,
+    enabled: !!BORED_URL,
   })
 
   const activityIsLoading = useMemo(() => isLoading || isFetching, [isLoading, isFetching])
