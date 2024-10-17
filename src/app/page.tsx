@@ -100,7 +100,7 @@ export default function Home() {
         />
       </Card>
       <Card themeColor={themeColor}
-            className="md:col-span-1 md:row-span-6 animate-fade-up md:animate-fade-right animate-once animate-delay-500 animate-ease-in-out">
+            className="md:col-span-1 md:row-span-7 animate-fade-up md:animate-fade-right animate-once animate-delay-500 animate-ease-in-out">
         <h2 className="text-xl font-bold">About me</h2>
         <p className="text-sm mb-4">Hi, I&apos;m Maksym, a front-end software developer from Ukraine. Currently in
           Norway. I have a bachelor&apos;s degree in software engineering.</p>
@@ -118,9 +118,9 @@ export default function Home() {
           it&apos;s not on my usual list. My goal is to find the right solution for each project.</p>
       </Card>
       <Slider themeColor={themeColor}
-              className="min-w-full md:min-w-[auto] md:max-w-[245px] md:row-span-2 md:col-start-2 md:row-start-5 animate-fade-up animate-once animate-delay-[800ms] md:animate-delay-1000 animate-ease-in-out"/>
+              className="min-w-full md:min-w-[auto] md:max-w-[245px] md:row-span-3 md:col-start-2 md:row-start-5 animate-fade-up animate-once animate-delay-[800ms] md:animate-delay-1000 animate-ease-in-out"/>
       <Card themeColor={themeColor}
-            className="md:col-start-2 md:row-start-7 md:max-w-[245px] md:row-span-4 animate-fade-up animate-once animate-delay-[1100ms] md:animate-delay-[1600ms] animate-ease-in-out">
+            className="md:col-start-2 md:row-start-8 md:max-w-[245px] md:row-span-4 animate-fade-up animate-once animate-delay-[1100ms] md:animate-delay-[1600ms] animate-ease-in-out">
         <h2 className="text-xl font-bold mb-4">Let&apos;s start working together!</h2>
         {/*<h6 className="text-sm text-darkslate-300 font-light">Contact details</h6>*/}
         <a href="mailto:maxim.akulovka@gmail.com"
@@ -143,7 +143,16 @@ export default function Home() {
         </div>
       </Card>
       <Card themeColor={themeColor}
-            className="workExamples cursor-pointer p-0 animate-fade-up md:animate-fade-left animate-once animate-delay-[1400ms] md:animate-delay-[1300ms] animate-ease-in-out">
+            className="playground cursor-pointer p-0 animate-fade-up md:animate-fade-left animate-once animate-delay-[1400ms] md:animate-delay-[1100ms] animate-ease-in-out">
+        <Link href={"/playground"}>
+          <div className="flex items-center justify-between p-6 hover:opacity-70 transition-all h-full">
+            <h2 className="text-xl font-bold">Playground</h2>
+            <LinkIcon color={darkMode}/>
+          </div>
+        </Link>
+      </Card>
+      <Card themeColor={themeColor}
+            className="workExamples cursor-pointer p-0 animate-fade-up md:animate-fade-left animate-once animate-delay-[1700ms] md:animate-delay-[1350ms] animate-ease-in-out">
         <Link href={"/works"}>
           <div className="flex items-center justify-between p-6 hover:opacity-70 transition-all h-full">
             <h2 className="text-xl font-bold">Work examples</h2>
@@ -152,7 +161,7 @@ export default function Home() {
         </Link>
       </Card>
       <Card themeColor={themeColor}
-            className="font-light flex items-center text-center justify-center animate-fade-up md:animate-fade-left animate-once animate-delay-[1700ms] md:animate-delay-[1900ms] animate-ease-in-out">
+            className="font-light flex items-center text-center justify-center animate-fade-up md:animate-fade-left animate-once animate-delay-[1700ms] md:animate-delay-[1700ms] animate-ease-in-out">
               <span className="absolute right-3 top-3 flex h-3 w-3">
                 <span
                   className="animate-ping animate-infinite absolute inline-flex h-full w-full rounded-full bg-ThemeGreen opacity-75"></span>
@@ -169,7 +178,7 @@ export default function Home() {
         <CurrentTime/>
       </Card>
       <Card themeColor={themeColor}
-            className="p-3 flex items-center justify-between animate-fade-up md:animate-fade-left animate-once animate-delay-[2300ms] md:animate-delay-[2200ms] animate-ease-in-out">
+            className="p-3 flex items-center justify-between animate-fade-up md:animate-fade-left animate-once animate-delay-[2300ms] md:animate-delay-[2000ms] animate-ease-in-out">
         <div className="w-10 h-10 rounded-full cursor-pointer bg-ThemeRed"
              onClick={() => setThemeColor("ThemeRed")}></div>
         <div className="w-10 h-10 rounded-full cursor-pointer bg-ThemeBlue"
@@ -182,7 +191,7 @@ export default function Home() {
              onClick={() => setThemeColor("ThemePurple")}></div>
       </Card>
       <Card themeColor={themeColor}
-            className="flex items-center justify-center text-sm md:row-span-2 animate-fade-up md:animate-fade-left animate-once animate-delay-[2600ms] md:animate-delay-[2500ms] animate-ease-in-out">
+            className="flex items-center justify-center text-sm md:row-span-2 animate-fade-up md:animate-fade-left animate-once animate-delay-[2500ms] md:animate-delay-[2300ms] animate-ease-in-out">
         © 2024 · Crafted with ♥️ using Next JS by Maksym Akulov.
       </Card>
     </main>
