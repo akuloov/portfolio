@@ -2,8 +2,6 @@
 
 import useThemeColor from "@/hooks/useThemeColor";
 import Card from "@/components/Card";
-import LinkCard from "@/components/LinkCard";
-import Link from "next/link";
 import Image from "next/image";
 import weatherApp from "../../../public/weatherApp.png";
 import todoApp from "../../../public/todoApp.png";
@@ -16,6 +14,7 @@ import useDarkMode from "@/hooks/useDarkMode";
 import {WorkExampleType} from "@/types/WorkExampleType";
 import {useMemo} from "react";
 import {cn} from "@/utils/cn";
+import LinkButton from "@/components/LinkButton";
 
 const Works = () => {
   const {darkMode} = useDarkMode();
@@ -145,11 +144,7 @@ const Works = () => {
   return (
     <main
       className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
-      <Link href={"/"} className="block w-fit">
-        <LinkCard className="animate-fade-down" themeColor={themeColor}>
-          Back
-        </LinkCard>
-      </Link>
+      <LinkButton route={"/"} className="animate-fade-down"/>
       {workExamples.map((workExample, index) => (
         <Card themeColor={themeColor}
               className={cn("flex flex-col items-center sm:items-start sm:flex-row mt-6 animate-fade-up md:animate-fade-left animate-once animate-ease-in-out p-4 sm:p-6 h-full sm:justify-between sm:gap-4", workExample.animateClassName)}

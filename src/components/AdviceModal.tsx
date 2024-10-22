@@ -6,7 +6,7 @@ import Image from "next/image";
 import {UnsplashDataType} from "@/types/UnsplashDataType";
 import SkeletonModal from "@/components/SkeletonModal";
 
-const Modal: React.FC<ModalType> = ({show, onClose, children, text}) => {
+const AdviceModal: React.FC<ModalType> = ({show, onClose, children, text}) => {
   const {darkMode} = useDarkMode();
   const UNSPLASH_URL = process.env.NEXT_PUBLIC_UNSPLASH_URL;
 
@@ -28,7 +28,7 @@ const Modal: React.FC<ModalType> = ({show, onClose, children, text}) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center px-2 sm:px-4 md:px-6"
+      className="fixed inset-0 bg-black bg-opacity-50 z-20 flex items-center justify-center px-2 sm:px-4 md:px-6"
       onClick={handleOverlayClick}>
       <div
         className={cn("relative bg-darkslate-500 p-4 rounded shadow-lg max-w-md animate-fade", {"bg-white text-black": !darkMode})}>
@@ -51,4 +51,4 @@ const Modal: React.FC<ModalType> = ({show, onClose, children, text}) => {
   );
 };
 
-export default Modal;
+export default AdviceModal;
