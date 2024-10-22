@@ -4,10 +4,9 @@ import LoadingStatus from "@/components/LoadingStatus";
 import LinkCard from "@/components/LinkCard";
 import Card from "@/components/Card";
 import useThemeColor from "@/hooks/useThemeColor";
-import AdviceModal from "@/components/AdviceModal";
+import AdviceModal from "@/components/getAdvice/AdviceModal";
 
 const GetAdvice = () => {
-
   const {themeColor} = useThemeColor();
 
   const [showModal, setShowModal] = useState(false);

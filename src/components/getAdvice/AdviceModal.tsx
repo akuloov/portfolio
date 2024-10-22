@@ -4,7 +4,7 @@ import useDarkMode from "@/hooks/useDarkMode";
 import {useQuery} from "@tanstack/react-query";
 import Image from "next/image";
 import {UnsplashDataType} from "@/types/UnsplashDataType";
-import SkeletonModal from "@/components/SkeletonModal";
+import AdviceModalSkeleton from "@/components/getAdvice/AdviceModalSkeleton";
 
 const AdviceModal: React.FC<ModalType> = ({show, onClose, children, text}) => {
   const {darkMode} = useDarkMode();
@@ -36,7 +36,7 @@ const AdviceModal: React.FC<ModalType> = ({show, onClose, children, text}) => {
           &times;
         </button>
         {isLoading ? (
-          <SkeletonModal/>
+          <AdviceModalSkeleton/>
         ) : (
           <>
             {data?.results[0]?.urls?.small && (

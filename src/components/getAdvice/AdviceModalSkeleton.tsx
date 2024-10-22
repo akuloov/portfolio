@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ModalSkeleton: React.FC = () => {
+const AdviceModalSkeleton: React.FC = () => {
   return (
     <div className="animate-pulse flex flex-col items-center space-y-4">
       <div className="bg-gray-300 h-64 w-64 rounded"></div>
@@ -13,4 +13,4 @@ const ModalSkeleton: React.FC = () => {
   );
 };
 
-export default ModalSkeleton;
+export default AdviceModalSkeleton;
