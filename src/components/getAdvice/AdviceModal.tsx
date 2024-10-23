@@ -16,6 +16,7 @@ const AdviceModal: React.FC<ModalType> = ({show, onClose, children, text}) => {
       fetch(`${UNSPLASH_URL}&query=${text}`).then((res) =>
         res.json(),
       ),
+    refetchOnWindowFocus: false,
   })
 
   if (!show) return null;

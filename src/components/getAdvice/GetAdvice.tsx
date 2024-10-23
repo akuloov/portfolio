@@ -20,6 +20,7 @@ const GetAdvice = () => {
         res.json(),
       ),
     enabled: !!BORED_URL,
+    refetchOnWindowFocus: false,
   })
 
   const activityIsLoading = useMemo(() => isLoading || isFetching, [isLoading, isFetching])
