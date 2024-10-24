@@ -6,11 +6,11 @@ import useThemeColor from "@/hooks/useThemeColor";
 import {useState} from "react";
 import {useQuery} from "@tanstack/react-query";
 import {IpType} from "@/types/IpType";
-import IpModal from "@/components/getApi/IpModal";
+import IpModal from "@/components/getIP/IpModal";
 import AdviceModalSkeleton from "@/components/getAdvice/AdviceModalSkeleton";
 import Image from "next/image";
 
-const GetApi = () => {
+const GetIP = () => {
   const {themeColor} = useThemeColor();
 
   const [showModal, setShowModal] = useState(false);
@@ -62,4 +62,4 @@ const GetApi = () => {
   );
 }
 
-export default GetApi;
+export default GetIP;
