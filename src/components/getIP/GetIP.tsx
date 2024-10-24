@@ -28,7 +28,9 @@ const GetIP = () => {
 
   const handleGetAdvice = () => {
     setShowModal(true);
-    refetch(); // Trigger fetch manually
+    if (!data) {
+      refetch(); // Trigger fetch manually only if data is not available
+    }
   };
 
   return (
