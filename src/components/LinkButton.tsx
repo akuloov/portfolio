@@ -1,3 +1,5 @@
+"use client";
+
 import LinkCard from "@/components/LinkCard";
 import Link from "next/link";
 import useThemeColor from "@/hooks/useThemeColor";

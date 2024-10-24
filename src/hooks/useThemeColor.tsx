@@ -1,3 +1,5 @@
+"use client";
+
 import useStore from "@/stateStorage/storage";
 import {ThemeColor} from "@/types/ThemeColorType";
 import {useCallback, useEffect} from "react";

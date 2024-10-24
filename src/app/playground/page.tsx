@@ -1,5 +1,3 @@
-"use client"
-
 import GetAdvice from "@/components/getAdvice/GetAdvice";
 import LinkButton from "@/components/LinkButton";
 import GetApi from "@/components/getApi/GetApi";
