@@ -7,6 +7,7 @@ import LinkCard from "@/components/LinkCard";
 import Card from "@/components/Card";
 import useThemeColor from "@/hooks/useThemeColor";
 import AdviceModal from "@/components/getAdvice/AdviceModal";
+import HandleFetchStatus from "@/components/HandleFetchStatus";
 
 const GetAdvice = () => {
   const {themeColor} = useThemeColor();
@@ -15,7 +16,7 @@ const GetAdvice = () => {
 
   const BORED_URL = process.env.NEXT_PUBLIC_BORED_URL;
 
-  const {isLoading, data, isFetching, refetch} = useQuery({
+  const {isLoading, data, isFetching, refetch, isPaused, isError} = useQuery({
     queryKey: ['repoData'],
     queryFn: () =>
       fetch(BORED_URL!).then((res) =>
@@ -46,9 +47,11 @@ const GetAdvice = () => {
     }
   };
 
+  /*const fetchStatus: HandleFechStatusProps = {isError, isPaused, customPauseMessage:'Could not get new advice'}*/
+
   return (
     <>
-      <Card themeColor={themeColor} className="animate-fade-down mt-5">
+      <Card themeColor={themeColor} className="animate-fade-down">
         <div>
           <h2 className="text-xl font-bold">Are you bored?</h2>
           <p className="font-light">Get advice on what you can do!</p>
@@ -66,6 +69,9 @@ const GetAdvice = () => {
             New activity
           </LinkCard>
         </div>
+        {isPaused &&
+            <HandleFetchStatus isPaused={isPaused} textError="Could not fetch a new activity" className="mt-3"/>
+        }
       </AdviceModal>
     </>
   )
