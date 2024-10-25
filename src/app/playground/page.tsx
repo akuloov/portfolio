@@ -1,6 +1,7 @@
 import GetAdvice from "@/components/getAdvice/GetAdvice";
 import LinkButton from "@/components/LinkButton";
 import GetIP from "@/components/getIP/GetIP";
+import DadJokes from "@/components/dadJokes/DadJokes";
 
 const Playground = () => {
 
@@ -10,6 +11,7 @@ const Playground = () => {
       <LinkButton route={"/"} className="animate-fade-down"/>
       <GetAdvice/>
       <GetIP/>
+      <DadJokes/>
       <div className="animate-fade-down rounded-lg overflow-hidden">
         <iframe
           width="100%"
