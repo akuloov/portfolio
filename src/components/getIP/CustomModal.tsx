@@ -2,7 +2,7 @@ import {ModalType} from "@/types/ModalType";
 import {cn} from "@/utils/cn";
 import useDarkMode from "@/hooks/useDarkMode";
 
-const IpModal: React.FC<ModalType> = ({show, onClose, children}) => {
+const CustomModal: React.FC<ModalType> = ({show, onClose, children}) => {
   const {darkMode} = useDarkMode();
 
   if (!show) return null;
@@ -28,4 +28,4 @@ const IpModal: React.FC<ModalType> = ({show, onClose, children}) => {
   );
 };
 
-export default IpModal;
+export default CustomModal;
