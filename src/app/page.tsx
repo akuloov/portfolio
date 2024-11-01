@@ -3,7 +3,7 @@
 import Card from "@/components/Card";
 import GithubIcon from "@/components/icons/GithubIcon";
 import Image from "next/image";
-import avatar from "../../public/avatar.webp";
+import avatar from "../../public/avatar.webp"; 
 import LinkCard from "@/components/LinkCard";
 import {useCallback, useMemo, useState} from "react";
 import FacebookIcon from "@/components/icons/FacebookIcon";
