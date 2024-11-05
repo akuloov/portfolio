@@ -44,7 +44,11 @@ export default function Home() {
 
   return (
     <>
-      <LinkButton route={"/login"} className="absolute right-0 top-0 z-10 rounded-none text-white rounded-bl p-1.5" text="Admin"/>
+      <LinkButton 
+        route={"/login"} 
+        className="absolute right-0 top-0 z-10 rounded-none text-white rounded-bl p-1.5"
+        text="Admin"
+      />
       <main
         className={cn("grid gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4", {"bg-white md:rounded-xl": !darkMode})}>
         <Card themeColor={themeColor}
