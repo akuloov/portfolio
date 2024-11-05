@@ -5,6 +5,7 @@ import {CircularProgress} from '@mui/material';
 import React, {useEffect, useState} from "react";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth} from "@/firebase/firebase.config";
+import LinkButton from "@/components/LinkButton";
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -31,9 +32,10 @@ const Admin = () => {
   }
 
   return (
-    <div>
-      <h1>Admin Page</h1>
-    </div>
+    <main
+      className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 flex flex-col text-white m-auto p-2 max-w-xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
+      <LinkButton route={"/"}/>
+    </main>
   );
 };
 

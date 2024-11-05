@@ -1,18 +1,39 @@
 "use client"
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {auth} from "@/firebase/firebase.config"; // Adjust path if needed
-import {signInWithEmailAndPassword} from "firebase/auth";
+import {onAuthStateChanged, signInWithEmailAndPassword} from "firebase/auth";
 import {useRouter} from 'next/navigation'
-import {Button, TextField} from "@mui/material";
+import {Button, CircularProgress, TextField} from "@mui/material";
 import LinkButton from "@/components/LinkButton";
 
 const Login: React.FC = ({onLoginSuccess}: { onLoginSuccess?: () => void }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+
   const router = useRouter();
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      router.push('/admin'); // Redirect to admin page if authenticated
+    }
+  }, [isAuthenticated, loading, router]);
+
+  if (loading) {
+    return <CircularProgress/>; // Show a loading spinner while checking authentication
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +49,7 @@ const Login: React.FC = ({onLoginSuccess}: { onLoginSuccess?: () => void }) => {
   return (
     <main
       className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 flex flex-col text-white m-auto p-2 max-w-xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
-      <LinkButton route={"/"} className=""/>
+      <LinkButton route={"/"}/>
       <form onSubmit={handleLogin}>
         <div className="bg-white w-64 p-6 mt-6 m-auto rounded flex flex-col gap-6">
           <TextField
