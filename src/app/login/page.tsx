@@ -6,11 +6,7 @@ import {signInWithEmailAndPassword} from "firebase/auth";
 import {useRouter} from 'next/navigation'
 import {Button, TextField} from "@mui/material";
 
-interface AdminLoginProps {
-  onLoginSuccess?: () => void;
-}
-
-const Login: React.FC<AdminLoginProps> = ({onLoginSuccess}) => {
+const Login: React.FC = ({onLoginSuccess}: { onLoginSuccess?: () => void }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
