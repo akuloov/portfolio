@@ -5,7 +5,7 @@ import Link from "next/link";
 import useThemeColor from "@/hooks/useThemeColor";
 
 const LinkButton = ({route, className, text = "Back", onClick}: {
-  route: string,
+  route?: string,
   className?: string,
   text?: string
   onClick?: () => void
@@ -14,11 +14,19 @@ const LinkButton = ({route, className, text = "Back", onClick}: {
   const {themeColor} = useThemeColor();
 
   return (
-    <Link href={route} className="block w-fit" onClick={onClick}>
-      <LinkCard className={className} themeColor={themeColor}>
-        {text}
-      </LinkCard>
-    </Link>
+    route ? (
+      <Link href={route} className="block w-fit" onClick={onClick}>
+        <LinkCard className={className} themeColor={themeColor}>
+          {text}
+        </LinkCard>
+      </Link>
+    ) : (
+      <div className="block w-fit" onClick={onClick}>
+        <LinkCard className={className} themeColor={themeColor}>
+          {text}
+        </LinkCard>
+      </div>
+    )
   );
 }
 
