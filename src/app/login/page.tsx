@@ -1,17 +1,19 @@
 "use client"
 
 import React, {useEffect, useState} from "react";
-import {auth} from "@/firebase/firebase.config"; // Adjust path if needed
+import {auth} from "@/firebase/firebase.config";
 import {onAuthStateChanged, signInWithEmailAndPassword} from "firebase/auth";
 import {useRouter} from 'next/navigation'
 import {Button, CircularProgress, TextField} from "@mui/material";
 import LinkButton from "@/components/LinkButton";
+import useIsAuthenticated from "@/hooks/useIsAuthenticated";
 
 const Login: React.FC = ({onLoginSuccess}: { onLoginSuccess?: () => void }) => {
+  const {isAuthenticated, setIsAuthenticated} = useIsAuthenticated();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
@@ -51,7 +53,7 @@ const Login: React.FC = ({onLoginSuccess}: { onLoginSuccess?: () => void }) => {
       className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 flex flex-col text-white m-auto p-2 max-w-xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
       <LinkButton route={"/"}/>
       <form onSubmit={handleLogin}>
-        <div className="bg-white w-64 p-6 mt-6 m-auto rounded flex flex-col gap-6">
+        <div className="bg-white w-72 p-6 mt-6 m-auto rounded flex flex-col gap-6">
           <TextField
             id="email"
             label="Email"

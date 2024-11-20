@@ -12,6 +12,9 @@ const useStore = create<State & Action>((set) => ({
   themeColor: "ThemeBlue" as ThemeColor,
   setThemeColor: (newThemeColor: ThemeColor) => set({themeColor: newThemeColor}),
   
+  projects: [],
+  setProjects: (newProjects: Project[]) => set({projects: newProjects}),
+  
   isAuthenticated: false,
   setIsAuthenticated: (newIsAuthenticated: boolean) => set({isAuthenticated: newIsAuthenticated}),
 }))
