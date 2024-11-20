@@ -356,11 +356,26 @@ const Works = () => {
                       height={400}
                     />
                   )}
-                  <Button
-                    type="submit"
-                    className="max-w-[100px]"
-                    variant="contained"
-                  >Submit</Button>
+                  <div className={cn("", {"w-full flex justify-between": image})}>
+                    {image && (
+                      <label htmlFor="dropzone-file"
+                             className="flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 w-40 h-[36.5px]">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Choose another image</p>
+                        <Field
+                          type="file"
+                          name="image"
+                          id="dropzone-file"
+                          className="hidden"
+                          onChange={handleImageChange}
+                        />
+                      </label>
+                    )}
+                    <Button
+                      type="submit"
+                      className="max-w-[100px] ml-auto"
+                      variant="contained"
+                    >Submit</Button>
+                  </div>
                 </div>
               </Card>
             </Form>
