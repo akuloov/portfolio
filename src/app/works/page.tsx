@@ -169,7 +169,7 @@ const Works = () => {
       // Update the number of fields
       setTechnologyNumber((prev) => prev - 1);
     }
-  };
+  }; 
 
 
   const deleteLink = (
