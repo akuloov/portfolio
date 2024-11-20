@@ -29,8 +29,7 @@ const Works = () => {
   const [technologies, setTechnologies] = useState<string[]>([]);
   const [projectLinks, setProjectLinks] = useState<{ name: string; link: string }[]>([]);
 
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [image, setImage] = useState<File | undefined | string>(undefined);
 
   const [createProjectMode, setCreateProjectMode] = useState<boolean>(false);
   const [technologyNumber, setTechnologyNumber] = useState(1); // number of technologies
@@ -124,7 +123,7 @@ const Works = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result as string);
+        setImage(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -169,7 +168,7 @@ const Works = () => {
       // Update the number of fields
       setTechnologyNumber((prev) => prev - 1);
     }
-  }; 
+  };
 
 
   const deleteLink = (
@@ -210,7 +209,7 @@ const Works = () => {
             description: "",
             technologies: technologies.length > 0 ? technologies : [""],
             projectLinks: projectLinks.length > 0 ? projectLinks : [{name: "", link: ""}],
-            image: null,
+            image: undefined,
           }}
           onSubmit={handleSubmit}
         >
@@ -322,7 +321,7 @@ const Works = () => {
                   </div>
                 </div>
                 <div className="flex flex-col h-full justify-between gap-2 items-end sm:min-h-[400px]">
-                  {!imagePreview && (
+                  {!image && (
                     <div className="flex items-center justify-center w-full">
                       <label htmlFor="dropzone-file"
                              className="flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 w-[300px] h-[400px]">
@@ -348,9 +347,9 @@ const Works = () => {
                       </label>
                     </div>
                   )}
-                  {imagePreview && (
+                  {image && (
                     <Image
-                      src={imagePreview}
+                      src={image as string}
                       className="rounded w-[300px] h-[400px]"
                       alt="Selected Image"
                       width={300}
