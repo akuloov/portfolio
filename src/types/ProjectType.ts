@@ -4,4 +4,5 @@ export type Project = {
   description: string;
   technologies: string[];
   projectLinks: { name: string; link: string }[];
+  image:  undefined | string;
 }

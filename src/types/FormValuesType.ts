@@ -3,5 +3,5 @@ export interface FormValues {
   description: string;
   technologies: string[];
   projectLinks: { name: string; link: string }[];
-  image: File | undefined;
+  image: undefined | string;
 }

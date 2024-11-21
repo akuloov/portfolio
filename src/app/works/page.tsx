@@ -10,7 +10,7 @@ import {useEffect, useState} from "react";
 import {cn} from "@/utils/cn";
 import LinkButton from "@/components/LinkButton";
 import {addDoc, collection, deleteDoc, doc, getDocs, runTransaction} from "@firebase/firestore";
-import {db} from "@/firebase/firebase.config";
+import {db, storage} from "@/firebase/firebase.config";
 import {Project} from "@/types/ProjectType";
 import useStore from "@/stateStorage/storage";
 import useIsAuthenticated from "@/hooks/useIsAuthenticated";
@@ -18,6 +18,9 @@ import {Button, IconButton} from "@mui/material";
 import LinkCard from "@/components/LinkCard";
 import {Form, Formik, Field} from "formik";
 import {FormValues} from "@/types/FormValuesType";
+import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import validations from "@/validation/validations";
+
 
 const Works = () => {
   const {darkMode} = useDarkMode();
@@ -29,7 +32,9 @@ const Works = () => {
   const [technologies, setTechnologies] = useState<string[]>([]);
   const [projectLinks, setProjectLinks] = useState<{ name: string; link: string }[]>([]);
 
-  const [image, setImage] = useState<File | undefined | string>(undefined);
+  const [imageFile, setImageFile] = useState<File | undefined>(undefined);
+  const [imageString, setImageString] = useState<undefined | string>(undefined);
+
 
   const [createProjectMode, setCreateProjectMode] = useState<boolean>(false);
   const [technologyNumber, setTechnologyNumber] = useState(1); // number of technologies
@@ -48,29 +53,40 @@ const Works = () => {
         description: doc.data().description,
         technologies: doc.data().technologies,
         projectLinks: doc.data().projectLinks,
+        image: doc.data().image,
       }));
       setTitle("");
       setDescription("");
       setTechnologies([]);
       setProjectLinks([]);
       setProjects(projectsData);
+      console.log(projectsData);
     };
     fetchProjects();
   }, []);
 
   // Handle project adding
   const handleSubmit = async (values: FormValues) => {
-    setCreateProjectMode(false);
+    let imageURL: string | undefined = undefined
+    if (imageFile) {
+      const imageRef = ref(storage, `images/${imageFile.name}`);
+      await uploadBytes(imageRef, imageFile);
+      imageURL = await getDownloadURL(imageRef);
+      setCreateProjectMode(false);
+      console.log(values);
+    }
 
+    const newProject: Project = {
+      id: "newProject",
+      title: values.title,
+      description: values.description,
+      technologies: values.technologies,
+      projectLinks: values.projectLinks,
+      image: imageURL,
+    }
     // Optimistic UI update: Add a temporary project with id 'newProject'
     setProjects([
-      {
-        id: "newProject",
-        title: values.title,
-        description: values.description,
-        technologies: values.technologies,
-        projectLinks: values.projectLinks,
-      },
+      newProject,
       ...projects,
     ]);
 
@@ -79,25 +95,17 @@ const Works = () => {
       await runTransaction(db, async (transaction) => {
         const projectRef = doc(collection(db, "projects"));
 
+
         // Add the project data
-        transaction.set(projectRef, {
-          title: values.title,
-          description: values.description,
-          technologies: values.technologies,
-          projectLinks: values.projectLinks,
-          image: values.image,
-        });
+        transaction.set(projectRef, newProject);
 
         // Update the state with the new project ID
         setProjects([
           {
+            ...newProject,
             id: projectRef.id,
-            title: values.title,
-            description: values.description,
-            technologies: values.technologies,
-            projectLinks: values.projectLinks,
           },
-          ...projects.filter(({id}) => id !== "newProject"), // Remove the temporary project
+          ...projects.filter(({id}) => id !== newProject.id), // Remove the temporary project
         ]);
       });
 
@@ -110,7 +118,7 @@ const Works = () => {
 
       // Roll back optimistic update if the transaction fails
       setProjects(
-        projects.filter(({id}) => id !== "newProject")
+        projects.filter(({id}) => id !== newProject.id)
       );
       setCreateProjectMode(true);
     }
@@ -123,9 +131,11 @@ const Works = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result as string);
+        if (!reader.result) return
+        setImageString(reader.result.toString());
       };
       reader.readAsDataURL(file);
+      setImageFile(file);
     }
   };
 
@@ -142,8 +152,6 @@ const Works = () => {
         }
         transaction.delete(docRef);
       });
-
-
     } catch (error) {
       // Restore UI and log the error
       const restoredProjects = [...projects];
@@ -209,11 +217,12 @@ const Works = () => {
             description: "",
             technologies: technologies.length > 0 ? technologies : [""],
             projectLinks: projectLinks.length > 0 ? projectLinks : [{name: "", link: ""}],
-            image: undefined,
+            image: imageString,
           }}
+          /*validationSchema={validations}*/
           onSubmit={handleSubmit}
         >
-          {({values, validateForm, setTouched, errors, setFieldValue}) => (
+          {({values, validateForm, setTouched, errors, setFieldValue, getFieldMeta}) => (
             <Form>
               <Card themeColor={themeColor}
                     className="flex flex-col items-center sm:items-start sm:flex-row mt-6 p-4 sm:p-6 h-full sm:justify-between sm:gap-4">
@@ -225,15 +234,20 @@ const Works = () => {
                       name="title"
                       className="text-xl font-bold bg-darkslate-500 hover:border-blue-400 border border-transparent rounded"
                       placeholder="Title"
-                      required
                     />
+                    {getFieldMeta('title').error && getFieldMeta('title').touched && (
+                      <div className="text-red-500">{getFieldMeta('title').error}</div>
+                    )}
                     <Field as="textarea"
-                           className="font-light mb-4 text-sm bg-darkslate-500 w-[240px] md:w-[340px] lg:w-[600px] min-[1160px]:w-[720px] hover:border-blue-400 border border-transparent rounded"
+                           className="font-light mb-4 text-sm bg-darkslate-500 w-[240px] md:w-[340px] lg:w-[600px] min-[1160px]:w-[720px] hover:border-blue-400 border border-transparent rounded resize-both overflow-hidden"
                            id="description"
                            name="description"
                            placeholder="Description"
-                           required
+                           resize="none"
                     />
+                    {getFieldMeta('description').error && getFieldMeta('description').touched && (
+                      <div className="text-red-500">{getFieldMeta('description').error}</div>
+                    )}
                     <div className="flex items-center">
                       <h2 className="text-base font-medium">
                         {technologyNumber > 1 ? "Technologies" : "Technology"} that I used:
@@ -263,8 +277,10 @@ const Works = () => {
                             id={`technologies.${index}`}
                             name={`technologies.${index}`}
                             value={values.technologies[index] || ""}
-                            required
                           />
+                          {getFieldMeta('technologies').error && (
+                            <div className="text-red-500">{getFieldMeta('technologies').error}</div>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -296,12 +312,14 @@ const Works = () => {
                           type="text"
                           className="bg-darkslate-400 hover:border-blue-400 border border-transparent rounded font-light"
                           placeholder="Link name"
-                          required
                           onInput={(e: any) => e.currentTarget.style.width = ((e.currentTarget.value.length + 1) * 8) + 'px'}
                           id={`projectLinks.${index}.name`}
                           name={`projectLinks.${index}.name`}
                           value={values.projectLinks[index]?.name || ""}
                         />
+                        {getFieldMeta('projectLinks').error && (
+                          <div className="text-red-500">{getFieldMeta('projectLinks').error}</div>
+                        )}
                         <div className="cursor-pointer flex items-center"
                         >
                           <LinkIcon color={darkMode} width="16" height="16"/>
@@ -309,19 +327,21 @@ const Works = () => {
                             type="text"
                             className="hover:border-blue-400 border border-transparent rounded font-light bg-[#4C4C4C]"
                             placeholder="Link"
-                            required
                             onInput={(e: any) => e.currentTarget.style.width = ((e.currentTarget.value.length + 1) * 8) + 'px'}
                             id={`projectLinks.${index}.link`}
                             name={`projectLinks.${index}.link`}
                             value={values.projectLinks[index]?.link || ""}
                           />
+                          {getFieldMeta('projectLinks').error && (
+                            <div className="text-red-500">{getFieldMeta('projectLinks').error}</div>
+                          )}
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div className="flex flex-col h-full justify-between gap-2 items-end sm:min-h-[400px]">
-                  {!image && (
+                  {!imageFile && (
                     <div className="flex items-center justify-center w-full">
                       <label htmlFor="dropzone-file"
                              className="flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 w-[300px] h-[400px]">
@@ -344,20 +364,23 @@ const Works = () => {
                           className="hidden"
                           onChange={handleImageChange}
                         />
+                        {getFieldMeta('image').error && (
+                          <div className="text-red-500">{getFieldMeta('image').error}</div>
+                        )}
                       </label>
                     </div>
                   )}
-                  {image && (
+                  {imageString && (
                     <Image
-                      src={image as string}
+                      src={imageString}
                       className="rounded w-[300px] h-[400px]"
                       alt="Selected Image"
                       width={300}
                       height={400}
                     />
                   )}
-                  <div className={cn("", {"w-full flex justify-between": image})}>
-                    {image && (
+                  <div className={cn("", {"w-full flex justify-between": imageFile})}>
+                    {imageFile && (
                       <label htmlFor="dropzone-file"
                              className="flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 w-40 h-[36.5px]">
                         <p className="text-sm text-gray-500 dark:text-gray-400">Choose another image</p>
@@ -410,8 +433,9 @@ const Works = () => {
             </div>
           </div>
           <div className="flex flex-col gap-4">
-            <Image src={weatherApp} className="rounded w-[300px] h-[400px]"
-                   alt="gdfgdf"/>
+            {project.image && (
+              <Image src={project.image} width={300} height={400} className="rounded w-[300px] h-[400px]"
+                     alt="gdfgdf"/>)}
             <LinkCard
               themeColor="ThemeRed"
               className="ml-auto"
