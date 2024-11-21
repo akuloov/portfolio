@@ -3,7 +3,6 @@
 import useThemeColor from "@/hooks/useThemeColor";
 import Card from "@/components/Card";
 import Image from "next/image";
-import weatherApp from "../../../public/weatherApp.png";
 import LinkIcon from "@/components/icons/LinkIcon";
 import useDarkMode from "@/hooks/useDarkMode";
 import {useEffect, useState} from "react";
@@ -18,7 +17,7 @@ import {Button, IconButton} from "@mui/material";
 import LinkCard from "@/components/LinkCard";
 import {Form, Formik, Field} from "formik";
 import {FormValues} from "@/types/FormValuesType";
-import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import {ref, uploadBytes, getDownloadURL, deleteObject} from "firebase/storage";
 import validations from "@/validation/validations";
 
 
@@ -60,7 +59,6 @@ const Works = () => {
       setTechnologies([]);
       setProjectLinks([]);
       setProjects(projectsData);
-      console.log(projectsData);
     };
     fetchProjects();
   }, []);
@@ -73,7 +71,6 @@ const Works = () => {
       await uploadBytes(imageRef, imageFile);
       imageURL = await getDownloadURL(imageRef);
       setCreateProjectMode(false);
-      console.log(values);
     }
 
     const newProject: Project = {
@@ -94,7 +91,6 @@ const Works = () => {
       // Execute the transaction
       await runTransaction(db, async (transaction) => {
         const projectRef = doc(collection(db, "projects"));
-
 
         // Add the project data
         transaction.set(projectRef, newProject);
@@ -124,7 +120,6 @@ const Works = () => {
     }
   };
 
-
   // Handle the file input change event
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -144,6 +139,16 @@ const Works = () => {
     // Optimistic UI update
     setProjects(projects.filter((proj) => proj.id !== project.id));
     const docRef = doc(db, "projects", project.id);
+    if (imageFile) {
+      const imageRef = ref(storage, `images/${imageFile.name}`);
+      deleteObject(imageRef).then(() => {
+        // File deleted successfully
+      }).catch((error) => {
+        // Uh-oh, an error occurred!
+      });
+      setImageFile(undefined);
+      setImageString("");
+    }
     try {
       await runTransaction(db, async (transaction) => {
         const docSnapshot = await transaction.get(docRef);
@@ -160,7 +165,6 @@ const Works = () => {
       console.error("Error deleting project: ", error);
     }
   };
-
 
   const deleteTechnology = (
     values: FormValues,
