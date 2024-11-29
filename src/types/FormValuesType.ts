@@ -1,7 +1,3 @@
-export interface FormValues {
-  title: string;
-  description: string;
-  technologies: string[];
-  projectLinks: { name: string; link: string }[];
-  image: undefined | string;
-}
+import {Project} from "@/types/ProjectType";
+
+export interface FormValues extends Omit<Project, "id" | "imageName"> {}
