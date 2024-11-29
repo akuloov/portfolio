@@ -12,7 +12,7 @@ interface LinkProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HT
 }
 
 const variants = cva(
-  "border border-b-4 border-r-4 rounded-lg px-5 py-2 w-fit h-fit active:border-b active:border-r active:ml-[3px] active:mt-[3px] cursor-pointer",
+  "border border-b-4 border-r-4 rounded-lg px-5 py-2 w-fit h-fit active:border-b active:border-r cursor-pointer",
   {
     variants: {
       themeColor: {

@@ -1,186 +1,201 @@
-"use client"
+"use client";
 
-import useThemeColor from "@/hooks/useThemeColor";
-import Card from "@/components/Card";
-import Image from "next/image";
-import weatherApp from "../../../public/weatherApp.png";
-import todoApp from "../../../public/todoApp.png";
-import petStoreApp from "../../../public/petStoreApp.png";
-import personalWebsite from "../../../public/personalWebsite.png";
-import honeyStore from "../../../public/honeyStore.png";
-import todoReactApp from "../../../public/todoReactApp.png";
-import LinkIcon from "@/components/icons/LinkIcon";
-import useDarkMode from "@/hooks/useDarkMode";
-import {WorkExampleType} from "@/types/WorkExampleType";
-import {useMemo} from "react";
-import {cn} from "@/utils/cn";
+import {useEffect, useState} from "react";
 import LinkButton from "@/components/LinkButton";
+import {collection, doc, getDocs, runTransaction} from "@firebase/firestore";
+import {db, storage} from "@/firebase/firebase.config";
+import {Project} from "@/types/ProjectType";
+import useStore from "@/stateStorage/storage";
+import useIsAuthenticated from "@/hooks/useIsAuthenticated";
+import {Form, Formik} from "formik";
+import {FormValues} from "@/types/FormValuesType";
+import {ref, uploadBytes, getDownloadURL, deleteObject, } from "firebase/storage";
+import validations from "@/validation/validations";
+import CreateProjectCard from "@/components/worksPage/CreateProjectCard";
+import Projects from "@/components/worksPage/Projects";
 
 const Works = () => {
-  const {darkMode} = useDarkMode();
-  const {themeColor} = useThemeColor();
+  const {isAuthenticated} = useIsAuthenticated();
 
-  const workExamples: WorkExampleType[] = useMemo(() => [
-    {
-      title: "Weather app",
-      description: "This is a weather forecast app, created using openweathermap API",
-      technologies: ["Next JS", "Typescript", "Tailwind css"],
-      projectLinks: [
-        {
-          name: "Github repository",
-          link: "https://github.com/akuloov/next-weather-app",
-        },
-        {
-          name: "Live Demo",
-          link: "https://akulov-weather-app-mu.vercel.app/",
-        },
-        {
-          name: "Openweathermap API",
-          link: "https://openweathermap.org/api",
+  const [imageFile, setImageFile] = useState<File | undefined>(undefined);
+
+  const [createProjectMode, setCreateProjectMode] = useState<boolean>(false);
+  const [submitDone, setSubmitDone] = useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const projects = useStore((state) => state.projects);
+  const setProjects = useStore((state) => state.setProjects);
+
+  useEffect(() => {
+    // initial fetch of projects
+    const fetchProjects = async () => {
+      setIsLoading(true);
+      const querySnapshot = await getDocs(collection(db, "projects"));
+      const projectsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        title: doc.data().title,
+        description: doc.data().description,
+        technologies: doc.data().technologies,
+        projectLinks: doc.data().projectLinks,
+        image: doc.data().image,
+        imageName: doc.data().imageName,
+      }));
+      setProjects(projectsData);
+      setIsLoading(false);
+    };
+    fetchProjects().then();
+  }, []);
+
+  const uploadProjectCache = async (newProject: Project) => {
+    return new Promise<void>((resolve) => {
+      setProjects((prevProjects) => {
+        const updatedProjects = [newProject, ...prevProjects];
+        resolve(); // Resolves the promise after updating the state
+        return updatedProjects;
+      });
+    });
+  };
+
+  const uploadImage = async (file: File | undefined): Promise<string | undefined> => {
+    if (!file) return undefined;
+    const imageRef = ref(storage, `images/${file.name}`);
+    await uploadBytes(imageRef, file);
+    return getDownloadURL(imageRef);
+  };
+
+  const handleSubmit = async (values: FormValues) => {
+    const newProject: Project = {
+      id: "newProject",
+      title: values.title,
+      description: values.description,
+      technologies: values.technologies,
+      projectLinks: values.projectLinks,
+      image: values.image ?? "",
+      imageName: imageFile?.name ?? undefined,
+    };
+
+    // Optimistic UI update: Add a temporary project with id 'newProject'
+    try {
+      await uploadProjectCache(newProject);
+
+      setSubmitDone(false);
+      setCreateProjectMode(false);
+
+      // Upload image if necessary
+      const imageURL = await uploadImage(imageFile);
+      // Execute Firestore transaction
+      const newProjectProperties = await runTransaction(db, async (transaction) => {
+        const projectRef = doc(collection(db, "projects"));
+        const { id, ...projData } = newProject; // Exclude temporary ID
+        transaction.set(projectRef, { ...projData, image: imageURL });
+        return { id: projectRef.id, image: imageURL };
+      });
+
+
+      // Update the state with the new project ID and image
+      setProjects((prevProjects) =>
+        prevProjects.map((proj) =>
+          proj.id === newProject.id
+            ? { ...newProject, ...newProjectProperties }
+            : proj
+        )
+      );
+
+      setImageFile(undefined);
+      setSubmitDone(true);
+    } catch (error) {
+      console.error("Transaction failed: ", error);
+
+      // Roll back optimistic update
+      setProjects((prevProjects) => prevProjects.filter(({ id }) => id !== newProject.id));
+      setCreateProjectMode(true);
+    }
+  };
+  
+  // Handle project deletion
+  const handleDelete = async (project: Project, index: number) => {
+    // Optimistic UI update
+    setProjects(projects.filter((proj) => proj.id !== project.id));
+    const docRef = doc(db, "projects", project.id);
+    if (project.image) {
+      const imageRef = ref(storage, `images/${project.imageName}`);
+      deleteObject(imageRef).then(() => {
+        // File deleted successfully
+      }).catch((error) => {
+        console.error(`Error in deleting project image with reference: ${project.imageName}`, {error})
+      });
+    }
+    try {
+      await runTransaction(db, async (transaction) => {
+        const docSnapshot = await transaction.get(docRef);
+        if (!docSnapshot.exists()) {
+          throw new Error(`Document with ID ${project.id} does not exist.`);
         }
-      ],
-      image: {
-        src: weatherApp,
-        alt: "Weather app",
-      },
-    },
-    {
-      title: "TODO app",
-      description: "This is a simple TODO app",
-      technologies: ["Next JS", "Typescript", "daisyui", "Tailwind css"],
-      projectLinks: [
-        {
-          name: "Github repository",
-          link: "https://github.com/akuloov/nextJS-Todo-App",
-        }
-      ],
-      image: {
-        src: todoApp,
-        alt: "TODO app",
-      },
-      animateClassName: "animate-delay-[300ms]",
-    },
-    {
-      title: "Personal website",
-      description: "This is a personal website that I created for myself and for fun, almost all information on this website is fake",
-      technologies: ["Webpack(my config)", "SCSS"],
-      projectLinks: [
-        {
-          name: "Github repository",
-          link: "https://github.com/akuloov/personal-practise",
-        },
-        {
-          name: "Live Demo",
-          link: "https://akuloov.github.io/personal-practise/dist/index.html",
-        },
-        {
-          name: "My webpack assembly",
-          link: "https://github.com/akuloov/my-assembly-webpack",
-        }
-      ],
-      image: {
-        src: personalWebsite,
-        alt: "Personal website",
-      },
-      animateClassName: "animate-delay-[600ms]",
-    },
-    {
-      title: "Pet store",
-      description: "This is a pet store app which I developed at student practice",
-      technologies: ["Laravel", "Laravel Mix", "SCSS"],
-      projectLinks: [
-        {
-          name: "Github repository",
-          link: "https://github.com/akuloov/project-task_laravel",
-        },
-      ],
-      image: {
-        src: petStoreApp,
-        alt: "Pet store app",
-      },
-      animateClassName: "animate-delay-[900ms]",
-    },
-    {
-      title: "Landing page",
-      description: "This is a landing page for a honey store for my father who is a beekeeper",
-      technologies: ["Webpack", "SCSS"],
-      projectLinks: [
-        {
-          name: "Github repository",
-          link: "https://github.com/akuloov/Akulov-Honey",
-        },
-        {
-          name: "Live Demo",
-          link: "https://akuloov.github.io/Akulov-Honey/",
-        }
-      ],
-      image: {
-        src: honeyStore,
-        alt: "Landing page",
-      },
-      animateClassName: "animate-delay-[1200ms]",
-    },
-    {
-      title: "TODO app",
-      description: "This is an another TODO app, but created using only React JS",
-      technologies: ["React JS"],
-      projectLinks: [
-        {
-          name: "Github repository",
-          link: "https://github.com/akuloov/Todo-App-React-JS",
-        },
-        {
-          name: "Live Demo",
-          link: "https://akuloov.github.io/Todo-App-React-JS/build/index.html",
-        }
-      ],
-      image: {
-        src: todoReactApp,
-        alt: "TODO app",
-      },
-      animateClassName: "animate-delay-[1500ms]",
-    },
-  ], []);
+        transaction.delete(docRef);
+      });
+    } catch (error) {
+      // Restore UI and log the error
+      const restoredProjects = [...projects];
+      restoredProjects.splice(index, 0, project);
+      setProjects(restoredProjects);
+      console.error(`Error deleting project with ID: ${project.id} `, {error});
+    }
+  };
+
   return (
-    <main
-      className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
-      <LinkButton route={"/"} className="animate-fade-down"/>
-      {workExamples.map((workExample, index) => (
-        <Card themeColor={themeColor}
-              className={cn("flex flex-col items-center sm:items-start sm:flex-row mt-6 animate-fade-up md:animate-fade-left animate-once animate-ease-in-out p-4 sm:p-6 h-full sm:justify-between sm:gap-4", workExample.animateClassName)}
-              key={index}>
-          <div className="flex flex-col justify-between gap-2 mr-auto sm:mr-0 sm:min-h-[400px]">
-            <div className="flex flex-col w-full">
-              <h2 className="text-xl font-bold">{workExample.title}</h2>
-              <p className="font-light mb-4 text-sm">{workExample.description}</p>
-              <h2 className="text-base font-medium">Technologies that I used:</h2>
-              <ul className="list-disc list-inside text-sm">
-                {workExample.technologies.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
+    <Formik<FormValues>
+      initialValues={{
+        title: "",
+        description: "",
+        technologies: [""],
+        projectLinks: [{name: "", link: ""}],
+        image: '',
+      }}
+      validationSchema={validations}
+      onSubmit={handleSubmit}
+    >
+      {({values, setFieldValue, getFieldMeta, resetForm, isValid}) => (
+        <Form className="w-full">
+          <main
+            className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
+            <div className="flex justify-between items-center ">
+              <LinkButton route={"/"} className="animate-fade-down"/>
+
+              {isAuthenticated && !isLoading && (
+                <LinkButton
+                  className="animate-fade-down"
+                  text="Add new project"
+                  onClick={() => {
+                    setCreateProjectMode(true);
+                  }}
+                />
+              )}
             </div>
-            <div
-              className={cn("bg-gray-300 p-4 max-w-[230px] rounded mb-10 sm:mb-0", {"bg-darkslate-400": darkMode})}>
-              <h2 className="text-base font-bold mb-2">Project Links</h2>
-              {workExample.projectLinks.map((item, index) => (
-                <a
-                  key={index}
-                  href={item.link}
-                  target="_blank"
-                  className="font-light w-fit flex items-center gap-1 hover:opacity-70 transition-all">{item.name}
-                  <LinkIcon
-                    color={darkMode} width="16" height="16"/>
-                </a>
-              ))}
-            </div>
-          </div>
-          <Image src={workExample.image.src} className="rounded min-w-[300px] max-w-[300px] h-[400px]"
-                 alt={workExample.image.alt}/>
-        </Card>
-      ))}
-    </main>
-  );
+
+            {createProjectMode && (
+              <CreateProjectCard
+                values={values}
+                setFieldValue={setFieldValue}
+                getFieldMeta={getFieldMeta}
+                imageFile={imageFile}
+                setImageFile={setImageFile}
+                isValid={isValid}
+                resetForm={resetForm}
+                submitDone={submitDone}
+              />
+            )}
+
+            <Projects
+              projects={projects}
+              setFieldValue={setFieldValue}
+              handleDelete={handleDelete}
+              isLoading={isLoading}
+            />
+          </main>
+        </Form>
+      )}
+    </Formik>
+  )
 };
 
 export default Works;
