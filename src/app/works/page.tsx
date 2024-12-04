@@ -1,15 +1,15 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import {ChangeEvent, ChangeEventHandler, SetStateAction, useEffect, useState} from "react";
 import LinkButton from "@/components/LinkButton";
-import {collection, doc, getDocs, runTransaction} from "@firebase/firestore";
+import {collection, doc, getDocs, runTransaction, updateDoc} from "@firebase/firestore";
 import {db, storage} from "@/firebase/firebase.config";
 import {Project} from "@/types/ProjectType";
 import useStore from "@/stateStorage/storage";
 import useIsAuthenticated from "@/hooks/useIsAuthenticated";
-import {Form, Formik} from "formik";
+import {Form, Formik, FormikErrors, FormikHelpers} from "formik";
 import {FormValues} from "@/types/FormValuesType";
-import {ref, uploadBytes, getDownloadURL, deleteObject, } from "firebase/storage";
+import {ref, uploadBytes, getDownloadURL, deleteObject,} from "firebase/storage";
 import validations from "@/validation/validations";
 import CreateProjectCard from "@/components/worksPage/CreateProjectCard";
 import Projects from "@/components/worksPage/Projects";
@@ -20,11 +20,15 @@ const Works = () => {
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
 
   const [createProjectMode, setCreateProjectMode] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<null | string>(null);
+
   const [submitDone, setSubmitDone] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState(true);
   const projects = useStore((state) => state.projects);
   const setProjects = useStore((state) => state.setProjects);
+  
+  /*const [filteredProjects, setFilteredProjects] = useState<Project[] | null>(null)*/
 
   useEffect(() => {
     // initial fetch of projects
@@ -55,6 +59,14 @@ const Works = () => {
       });
     });
   };
+  
+  const updateProjectCache =  (updatedProject: Project) => { 
+      setProjects((prevProjects) => {
+       return prevProjects.map((proj) =>
+          proj.id === updatedProject.id ? updatedProject : proj
+        );
+    });
+  }
 
   const uploadImage = async (file: File | undefined): Promise<string | undefined> => {
     if (!file) return undefined;
@@ -86,17 +98,16 @@ const Works = () => {
       // Execute Firestore transaction
       const newProjectProperties = await runTransaction(db, async (transaction) => {
         const projectRef = doc(collection(db, "projects"));
-        const { id, ...projData } = newProject; // Exclude temporary ID
-        transaction.set(projectRef, { ...projData, image: imageURL });
-        return { id: projectRef.id, image: imageURL };
+        const {id, ...projData} = newProject; // Exclude temporary ID
+        transaction.set(projectRef, {...projData, image: imageURL});
+        return {id: projectRef.id, image: imageURL};
       });
-
 
       // Update the state with the new project ID and image
       setProjects((prevProjects) =>
         prevProjects.map((proj) =>
           proj.id === newProject.id
-            ? { ...newProject, ...newProjectProperties }
+            ? {...newProject, ...newProjectProperties}
             : proj
         )
       );
@@ -107,11 +118,11 @@ const Works = () => {
       console.error("Transaction failed: ", error);
 
       // Roll back optimistic update
-      setProjects((prevProjects) => prevProjects.filter(({ id }) => id !== newProject.id));
+      setProjects((prevProjects) => prevProjects.filter(({id}) => id !== newProject.id));
       setCreateProjectMode(true);
     }
   };
-  
+
   // Handle project deletion
   const handleDelete = async (project: Project, index: number) => {
     // Optimistic UI update
@@ -142,9 +153,44 @@ const Works = () => {
     }
   };
 
+  const openEditProject = async (project: Project, setValues: (values: SetStateAction<FormValues>, shouldValidate?: boolean | undefined) => Promise<void | FormikErrors<FormValues>>) => {
+    await setValues(project);
+    setImageFile(project.imageName ? new File([], project.imageName) : undefined);
+    setEditMode(project.id);
+  };
+
+  const submitEditProject = async (values: FormValues) => {
+    if (!values.id) {
+      console.error("Project ID is missing");
+      return;
+    }
+
+     updateProjectCache(values)
+    setEditMode(null);
+
+    const projectRef = doc(db, "projects", values.id);
+    await updateDoc(projectRef, {
+      title: values.title,
+      description: values.description,
+      technologies: values.technologies,
+      projectLinks: values.projectLinks,
+      image: values.image,
+    });
+  }
+  
+  /*const handleSearchOnChange =(e: ChangeEvent<HTMLInputElement>) =>  {
+    const searchString = e.target.value
+    if (searchString === "" || !projects) { setFilteredProjects(null); return; }
+    const searchResults = (filteredProjects ?? projects).filter((project) => {
+      return project.title.toLowerCase().includes(searchString.toLowerCase().trim());
+    });
+    setFilteredProjects(searchResults);
+  }*/
+  
   return (
     <Formik<FormValues>
       initialValues={{
+        id: "",
         title: "",
         description: "",
         technologies: [""],
@@ -152,15 +198,17 @@ const Works = () => {
         image: '',
       }}
       validationSchema={validations}
-      onSubmit={handleSubmit}
+      onSubmit={(values) => {
+        editMode ? submitEditProject(values) : handleSubmit(values)
+      }}
     >
-      {({values, setFieldValue, getFieldMeta, resetForm, isValid}) => (
+      {({values, setFieldValue, getFieldMeta, resetForm, isValid, setValues}) => (
         <Form className="w-full">
           <main
             className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
             <div className="flex justify-between items-center ">
               <LinkButton route={"/"} className="animate-fade-down"/>
-
+              {/*<input onChange={handleSearchOnChange} />*/}
               {isAuthenticated && !isLoading && (
                 <LinkButton
                   className="animate-fade-down"
@@ -182,14 +230,26 @@ const Works = () => {
                 isValid={isValid}
                 resetForm={resetForm}
                 submitDone={submitDone}
+                editMode={false}
+                openEditProject={(project) => openEditProject(project, setValues)}
               />
             )}
 
             <Projects
-              projects={projects}
+              projects={/*filteredProjects ?? */projects}
               setFieldValue={setFieldValue}
               handleDelete={handleDelete}
               isLoading={isLoading}
+              openEditProject={(project) => openEditProject(project, setValues)}
+              values={values}
+              getFieldMeta={getFieldMeta}
+              imageFile={imageFile}
+              setImageFile={setImageFile}
+              isValid={isValid}
+              resetForm={resetForm}
+              submitDone={submitDone}
+              setValues={setValues}
+              editProjectID={editMode}
             />
           </main>
         </Form>

@@ -9,6 +9,7 @@ import useThemeColor from "@/hooks/useThemeColor";
 import useDarkMode from "@/hooks/useDarkMode";
 import {FormValues} from "@/types/FormValuesType";
 import {useEffect} from "react";
+import {Project} from "@/types/ProjectType";
 
 const CreateProjectCard = ({
                              values,
@@ -19,6 +20,9 @@ const CreateProjectCard = ({
                              isValid,
                              resetForm,
                              submitDone,
+                             editMode,
+                             openEditProject,
+                             key,
                            }: {
                              values: FormValues,
                              setFieldValue: (field: string, value: any, shouldValidate?: boolean) => Promise<void | FormikErrors<FormValues>>,
@@ -28,6 +32,9 @@ const CreateProjectCard = ({
                              isValid: boolean;
                              resetForm: () => void;
                              submitDone: boolean;
+                             editMode: boolean;
+                             openEditProject: (project: Project) => void;
+                             key?: string;
                            }
 ) => {
   const {themeColor} = useThemeColor();
@@ -57,8 +64,11 @@ const CreateProjectCard = ({
   }, [submitDone]);
 
   return (
-    <Card themeColor={themeColor}
-          className="flex  flex-col items-center sm:items-start sm:flex-row mt-6 p-4 sm:p-6 h-full sm:justify-between sm:gap-4">
+    <Card
+      themeColor={themeColor}
+      className="flex  flex-col items-center sm:items-start sm:flex-row mt-6 p-4 sm:p-6 h-full sm:justify-between sm:gap-4"
+      key={key}
+    >
       <div className="flex flex-col justify-between gap-2 mr-auto sm:mr-0 sm:min-h-[400px]">
         <div className="flex flex-col w-full">
           <FormInput
