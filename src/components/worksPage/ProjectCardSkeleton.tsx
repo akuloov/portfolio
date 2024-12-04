@@ -1,7 +1,9 @@
 import Card from "@/components/Card";
 import useThemeColor from "@/hooks/useThemeColor";
+import useIsAuthenticated from "@/hooks/useIsAuthenticated";
 
 const ProjectCardSkeleton = () => {
+  const {isAuthenticated} = useIsAuthenticated();
   const {themeColor} = useThemeColor();
 
   return (
@@ -24,7 +26,16 @@ const ProjectCardSkeleton = () => {
         </div>
         <div className="flex flex-col gap-4">
           <div className="rounded w-[300px] h-[400px] bg-gray-200"></div>
-          <div className="h-10 bg-gray-200 ml-auto rounded w-1/2"></div>
+          {isAuthenticated && (
+            <div className="flex justify-between">
+              <div className="h-10 bg-gray-300 rounded w-1/3 p-2 flex items-center justify-center">
+                <div className="h-5 bg-gray-200 rounded w-full"></div>
+              </div>
+              <div className="h-10 bg-gray-300 rounded w-1/2 p-2 flex items-center justify-center">
+                <div className="h-5 bg-gray-200 rounded w-full"></div>
+              </div>
+            </div>
+          )}
         </div>
       </Card>
       <Card
@@ -45,7 +56,16 @@ const ProjectCardSkeleton = () => {
         </div>
         <div className="flex flex-col gap-4">
           <div className="rounded w-[300px] h-[400px] bg-gray-200"></div>
-          <div className="h-10 bg-gray-200 ml-auto rounded w-1/2"></div>
+          {isAuthenticated && (
+            <div className="flex justify-between">
+              <div className="h-10 bg-gray-300 rounded w-1/3 p-2 flex items-center justify-center">
+                <div className="h-5 bg-gray-200 rounded w-full"></div>
+              </div>
+              <div className="h-10 bg-gray-300 rounded w-1/2 p-2 flex items-center justify-center">
+                <div className="h-5 bg-gray-200 rounded w-full"></div>
+              </div>
+            </div>
+          )}
         </div>
       </Card>
     </>
