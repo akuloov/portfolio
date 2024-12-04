@@ -10,6 +10,7 @@ import {FormValues} from "@/types/FormValuesType";
 import {FieldMetaProps, FormikErrors} from "formik";
 import ProjectCardSkeleton from "@/components/worksPage/ProjectCardSkeleton";
 import CreateProjectCard from "@/components/worksPage/CreateProjectCard";
+import useIsAuthenticated from "@/hooks/useIsAuthenticated";
 
 const Projects = ({
                     projects,
@@ -42,25 +43,26 @@ const Projects = ({
   setValues: (values: React.SetStateAction<FormValues>, shouldValidate?: boolean) => Promise<void | FormikErrors<FormValues>>;
   editProjectID: string | null;
 }) => {
+  const {isAuthenticated} = useIsAuthenticated();
   const {darkMode} = useDarkMode();
   const {themeColor} = useThemeColor();
 
   return isLoading ? <ProjectCardSkeleton/> : (
     <>
       {projects.map((project: Project, index: number) => editProjectID === project.id ? (
-        <CreateProjectCard
-          values={values}
-          setFieldValue={setFieldValue}
-          getFieldMeta={getFieldMeta}
-          imageFile={imageFile}
-          setImageFile={setImageFile}
-          isValid={isValid}
-          resetForm={resetForm}
-          submitDone={submitDone}
-          editMode
-          openEditProject={(project) => openEditProject(project, setValues)}
-          key={project.id + "edit"}
-        />) : (
+          <CreateProjectCard
+            values={values}
+            setFieldValue={setFieldValue}
+            getFieldMeta={getFieldMeta}
+            imageFile={imageFile}
+            setImageFile={setImageFile}
+            isValid={isValid}
+            resetForm={resetForm}
+            submitDone={submitDone}
+            editMode
+            openEditProject={(project) => openEditProject(project, setValues)}
+            key={project.id + "edit"}
+          />) : (
           <Card themeColor={themeColor}
                 className="flex flex-col items-center sm:items-start sm:flex-row mt-6 p-4 sm:p-6 h-full sm:justify-between sm:gap-4"
                 key={project.id + "card"}>
@@ -92,14 +94,18 @@ const Projects = ({
                 <Image src={project.image} width={300} height={400} className="rounded w-[300px] h-[400px]"
                        alt="gdfgdf"/>)}
               <div className="flex justify-between">
-                <LinkCard
-                  themeColor="ThemeBlue"
-                  onClick={() => openEditProject(project, setValues)}
-                >Edit project</LinkCard>
-                <LinkCard
-                  themeColor="ThemeRed"
-                  onClick={() => handleDelete(project, index, setFieldValue)}
-                >Delete project</LinkCard>
+                {isAuthenticated && (
+                  <>
+                    <LinkCard
+                      themeColor="ThemeBlue"
+                      onClick={() => openEditProject(project, setValues)}
+                    >Edit project</LinkCard>
+                    <LinkCard
+                      themeColor="ThemeRed"
+                      onClick={() => handleDelete(project, index, setFieldValue)}
+                    >Delete project</LinkCard>
+                  </>
+                )}
               </div>
             </div>
           </Card>
