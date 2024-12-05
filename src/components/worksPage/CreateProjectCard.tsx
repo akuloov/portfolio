@@ -9,7 +9,6 @@ import useThemeColor from "@/hooks/useThemeColor";
 import useDarkMode from "@/hooks/useDarkMode";
 import {FormValues} from "@/types/FormValuesType";
 import {useEffect} from "react";
-import {Project} from "@/types/ProjectType";
 
 const CreateProjectCard = ({
                              values,
@@ -21,7 +20,6 @@ const CreateProjectCard = ({
                              resetForm,
                              submitDone,
                              editMode,
-                             openEditProject,
                              key,
                            }: {
                              values: FormValues,
@@ -33,7 +31,6 @@ const CreateProjectCard = ({
                              resetForm: () => void;
                              submitDone: boolean;
                              editMode: boolean;
-                             openEditProject: (project: Project) => void;
                              key?: string;
                            }
 ) => {
@@ -160,7 +157,6 @@ const CreateProjectCard = ({
               </div>
             </div>
           ))}
-
         </div>
       </div>
       <div className="flex flex-col h-full justify-between gap-2 items-end sm:min-h-[400px]">
@@ -220,6 +216,7 @@ const CreateProjectCard = ({
             className="max-w-[100px] ml-auto"
             variant="contained"
             disabled={!isValid}
+            onClick={() => setTimeout(() => editMode && resetForm(), 300)}
           >Submit</Button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, {ChangeEvent, ChangeEventHandler, SetStateAction, useEffect, useState} from "react";
+import React, {ChangeEvent, SetStateAction, useEffect, useState} from "react";
 import LinkButton from "@/components/LinkButton";
 import {collection, doc, getDocs, runTransaction, updateDoc} from "@firebase/firestore";
 import {db, storage} from "@/firebase/firebase.config";
@@ -212,7 +212,6 @@ const Works = () => {
       }}
       validationSchema={validations}
       onSubmit={(values) => {
-        console.log("Form values: ", values);
         editMode ? submitEditProject(values) : handleSubmit(values)
       }}
     >
@@ -244,7 +243,6 @@ const Works = () => {
                 resetForm={resetForm}
                 submitDone={submitDone}
                 editMode={false}
-                openEditProject={(project) => openEditProject(project, setValues)}
               />
             )}
 
