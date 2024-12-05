@@ -89,8 +89,15 @@ const Projects = ({
                   </a>
                 ))}
               </div>
-              <div className="flex mt-auto mb-10 sm:mb-0">Created:
-                <span className="ml-1 text-darkslate-300">{formatDate(project.date)}</span>
+              <div className="mb-10 sm:mb-0 mt-auto">
+                {project.updatedDate && (
+                  <div className="flex">Updated:
+                    <span className="ml-1 text-darkslate-300">{formatDate(project.updatedDate)}</span>
+                  </div>
+                )}
+                <div className="flex mt-auto">Created:
+                  <span className="ml-1 text-darkslate-300">{formatDate(project.createdDate)}</span>
+                </div>
               </div>
             </div>
             <div className="flex flex-col gap-4">

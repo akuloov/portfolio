@@ -47,7 +47,8 @@ const Works = () => {
         projectLinks: doc.data().projectLinks,
         image: doc.data().image,
         imageName: doc.data().imageName,
-        date: doc.data().date,
+        createdDate: doc.data().createdDate,
+        updatedDate: doc.data().updatedDate,
       }));
       setProjects(projectsData);
       setIsLoading(false);
@@ -66,6 +67,7 @@ const Works = () => {
   };
 
   const updateProjectCache = (updatedProject: Project) => {
+    updatedProject.updatedDate = new Date().toISOString();
     setProjects((prevProjects) => {
       return prevProjects.map((proj) =>
         proj.id === updatedProject.id ? updatedProject : proj
@@ -89,7 +91,7 @@ const Works = () => {
       projectLinks: values.projectLinks,
       image: values.image ?? "",
       imageName: imageFile?.name ?? undefined,
-      date: new Date().toISOString(),
+      createdDate: new Date().toISOString(),
     };
 
     // Optimistic UI update: Add a temporary project with id 'newProject'
@@ -181,6 +183,8 @@ const Works = () => {
       technologies: values.technologies,
       projectLinks: values.projectLinks,
       image: values.image,
+      createDate: values.createdDate,
+      updatedDate: new Date().toISOString(),
     });
   }
 
@@ -204,7 +208,7 @@ const Works = () => {
         technologies: [""],
         projectLinks: [{name: "", link: ""}],
         image: '',
-        date: new Date().toISOString(),
+        createdDate: new Date().toISOString(),
       }}
       validationSchema={validations}
       onSubmit={(values) => {
