@@ -8,7 +8,6 @@ import {FieldMetaProps, FormikErrors} from "formik";
 import useThemeColor from "@/hooks/useThemeColor";
 import useDarkMode from "@/hooks/useDarkMode";
 import {FormValues} from "@/types/FormValuesType";
-import {useEffect} from "react";
 
 const CreateProjectCard = ({
                              values,
@@ -17,10 +16,7 @@ const CreateProjectCard = ({
                              imageFile,
                              setImageFile,
                              isValid,
-                             resetForm,
                              submitDone,
-                             editMode,
-                             key,
                            }: {
                              values: FormValues,
                              setFieldValue: (field: string, value: any, shouldValidate?: boolean) => Promise<void | FormikErrors<FormValues>>,
@@ -28,10 +24,7 @@ const CreateProjectCard = ({
                              imageFile: File | undefined,
                              setImageFile: (file: File | undefined) => void;
                              isValid: boolean;
-                             resetForm: () => void;
                              submitDone: boolean;
-                             editMode: boolean;
-                             key?: string;
                            }
 ) => {
   const {themeColor} = useThemeColor();
@@ -53,18 +46,10 @@ const CreateProjectCard = ({
   const imageError = getFieldMeta('image').error
   const imageTouched = getFieldMeta('image').touched
 
-  useEffect(() => {
-    if (submitDone) {
-      resetForm()
-    }
-
-  }, [submitDone]);
-
   return (
     <Card
       themeColor={themeColor}
       className="flex  flex-col items-center sm:items-start sm:flex-row mt-6 p-4 sm:p-6 h-full sm:justify-between sm:gap-4"
-      key={key}
     >
       <div className="flex flex-col justify-between gap-2 mr-auto sm:mr-0 sm:min-h-[400px]">
         <div className="flex flex-col w-full">
@@ -216,7 +201,6 @@ const CreateProjectCard = ({
             className="max-w-[100px] ml-auto"
             variant="contained"
             disabled={!isValid}
-            onClick={() => setTimeout(() => editMode && resetForm(), 300)}
           >Submit</Button>
         </div>
       </div>

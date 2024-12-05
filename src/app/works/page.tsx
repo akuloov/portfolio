@@ -82,7 +82,7 @@ const Works = () => {
     return getDownloadURL(imageRef);
   };
 
-  const handleSubmit = async (values: FormValues) => {
+  const handleSubmit = async (values: FormValues, resetForm: () => void) => {
     const newProject: Project = {
       id: "newProject",
       title: values.title,
@@ -104,24 +104,22 @@ const Works = () => {
       // Upload image if necessary
       const imageURL = await uploadImage(imageFile);
       // Execute Firestore transaction
-      const newProjectProperties = await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async (transaction) => {
         const projectRef = doc(collection(db, "projects"));
         const {id, ...projData} = newProject; // Exclude temporary ID
         transaction.set(projectRef, {...projData, image: imageURL});
-        return {id: projectRef.id, image: imageURL};
+        setProjects((prevProjects) =>
+          prevProjects.map((proj) =>
+            proj.id === newProject.id
+              ? {...newProject, id}
+              : proj
+          )
+        );
       });
-
-      // Update the state with the new project ID and image
-      setProjects((prevProjects) =>
-        prevProjects.map((proj) =>
-          proj.id === newProject.id
-            ? {...newProject, ...newProjectProperties}
-            : proj
-        )
-      );
 
       setImageFile(undefined);
       setSubmitDone(true);
+      resetForm()
     } catch (error) {
       console.error("Transaction failed: ", error);
 
@@ -167,7 +165,7 @@ const Works = () => {
     setEditMode(project.id);
   };
 
-  const submitEditProject = async (values: FormValues) => {
+  const submitEditProject = async (values: FormValues, resetForm: () => void) => {
     if (!values.id) {
       console.error("Project ID is missing");
       return;
@@ -175,6 +173,7 @@ const Works = () => {
 
     updateProjectCache(values)
     setEditMode(null);
+    resetForm();
 
     const projectRef = doc(db, "projects", values.id);
     await updateDoc(projectRef, {
@@ -183,7 +182,7 @@ const Works = () => {
       technologies: values.technologies,
       projectLinks: values.projectLinks,
       image: values.image,
-      createDate: values.createdDate,
+      createdDate: values.createdDate,
       updatedDate: new Date().toISOString(),
     });
   }
@@ -211,11 +210,11 @@ const Works = () => {
         createdDate: new Date().toISOString(),
       }}
       validationSchema={validations}
-      onSubmit={(values) => {
-        editMode ? submitEditProject(values) : handleSubmit(values)
+      onSubmit={(values, {resetForm}) => {
+        editMode ? submitEditProject(values, resetForm) : handleSubmit(values, resetForm)
       }}
     >
-      {({values, setFieldValue, getFieldMeta, resetForm, isValid, setValues}) => (
+      {({values, setFieldValue, getFieldMeta, isValid, setValues}) => (
         <Form className="w-full">
           <main
             className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
@@ -231,21 +230,6 @@ const Works = () => {
                 />
               )}
             </div>
-
-            {createProjectMode && (
-              <CreateProjectCard
-                values={values}
-                setFieldValue={setFieldValue}
-                getFieldMeta={getFieldMeta}
-                imageFile={imageFile}
-                setImageFile={setImageFile}
-                isValid={isValid}
-                resetForm={resetForm}
-                submitDone={submitDone}
-                editMode={false}
-              />
-            )}
-
             <div className="flex gap-4 mt-5">
               <Card
                 themeColor={themeColor}
@@ -262,7 +246,17 @@ const Works = () => {
                 <h1 className="text-4xl font-bold text-center">Filtering</h1>
               </Card>
             </div>
-
+            {createProjectMode && (
+              <CreateProjectCard
+                values={values}
+                setFieldValue={setFieldValue}
+                getFieldMeta={getFieldMeta}
+                imageFile={imageFile}
+                setImageFile={setImageFile}
+                isValid={isValid}
+                submitDone={submitDone}
+              />
+            )}
             <Projects
               projects={filteredProjects ?? projects}
               setFieldValue={setFieldValue}
@@ -274,7 +268,6 @@ const Works = () => {
               imageFile={imageFile}
               setImageFile={setImageFile}
               isValid={isValid}
-              resetForm={resetForm}
               submitDone={submitDone}
               setValues={setValues}
               editProjectID={editMode}
