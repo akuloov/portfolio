@@ -88,18 +88,19 @@ const CreateProjectCard = ({
             </h2>
             <IconButton
               size="medium"
-              className="w-[30px] h-[30px] bg-white p-0"
+              className="w-[30px] h-[30px] p-0 hover:scale-110"
               onClick={() => setFieldValue("technologies", [...values.technologies, ""])}
             >
               <div className="text-white">+</div>
             </IconButton>
-            {values.technologies.length !== 1 && (<IconButton
-              size="small"
-              className="w-[30px] h-[30px] bg-white p-0"
-              onClick={() => setFieldValue("technologies", [...values.technologies.slice(0, -1)])}
-            >
-              <div className="text-white">-</div>
-            </IconButton>)}
+            {values.technologies.length !== 1 && (
+              <IconButton
+                size="small"
+                className="w-[30px] h-[30px] p-0 hover:scale-110"
+                onClick={() => setFieldValue("technologies", [...values.technologies.slice(0, -1)])}
+              >
+                <div className="text-white">-</div>
+              </IconButton>)}
           </div>
           <ul className="list-disc list-inside text-sm">
             {values.technologies.map((tech, index) => (
@@ -117,17 +118,17 @@ const CreateProjectCard = ({
           className={cn("bg-gray-300 p-4 max-w-[260px] rounded mb-10 sm:mb-0", {"bg-darkslate-400": darkMode})}>
           <div className="flex items-center">
             <h2 className="text-base font-bold">Project Links</h2>
-            <div className="flex items-center">
+            <div className="flex">
               <IconButton
                 size="medium"
-                className="w-[30px] h-[30px] bg-white p-0 mb-2 hover:scale-110"
+                className="w-[30px] h-[30px] p-0 hover:scale-110"
                 onClick={() => setFieldValue("projectLinks", [...values.projectLinks, {name: "", link: ""}])}
               >
                 <div className="text-white">+</div>
               </IconButton>
               <IconButton
                 size="small"
-                className="w-[30px] h-[30px] bg-white p-0"
+                className="w-[30px] h-[30px] p-0 hover:scale-110"
                 onClick={() => setFieldValue("projectLinks", [...values.projectLinks.slice(0, -1)])}
               >
                 <div className="text-white">-</div>
