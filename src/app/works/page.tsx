@@ -1,6 +1,6 @@
 "use client";
 
-import {ChangeEvent, ChangeEventHandler, SetStateAction, useEffect, useState} from "react";
+import React, {ChangeEvent, ChangeEventHandler, SetStateAction, useEffect, useState} from "react";
 import LinkButton from "@/components/LinkButton";
 import {collection, doc, getDocs, runTransaction, updateDoc} from "@firebase/firestore";
 import {db, storage} from "@/firebase/firebase.config";
@@ -13,9 +13,13 @@ import {ref, uploadBytes, getDownloadURL, deleteObject,} from "firebase/storage"
 import validations from "@/validation/validations";
 import CreateProjectCard from "@/components/worksPage/CreateProjectCard";
 import Projects from "@/components/worksPage/Projects";
+import {TextField} from "@mui/material";
+import Card from "@/components/Card";
+import useThemeColor from "@/hooks/useThemeColor";
 
 const Works = () => {
   const {isAuthenticated} = useIsAuthenticated();
+  const {themeColor} = useThemeColor();
 
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
 
@@ -27,8 +31,8 @@ const Works = () => {
   const [isLoading, setIsLoading] = useState(true);
   const projects = useStore((state) => state.projects);
   const setProjects = useStore((state) => state.setProjects);
-  
-  /*const [filteredProjects, setFilteredProjects] = useState<Project[] | null>(null)*/
+
+  const [filteredProjects, setFilteredProjects] = useState<Project[] | null>(null)
 
   useEffect(() => {
     // initial fetch of projects
@@ -43,6 +47,7 @@ const Works = () => {
         projectLinks: doc.data().projectLinks,
         image: doc.data().image,
         imageName: doc.data().imageName,
+        date: doc.data().date,
       }));
       setProjects(projectsData);
       setIsLoading(false);
@@ -59,12 +64,12 @@ const Works = () => {
       });
     });
   };
-  
-  const updateProjectCache =  (updatedProject: Project) => { 
-      setProjects((prevProjects) => {
-       return prevProjects.map((proj) =>
-          proj.id === updatedProject.id ? updatedProject : proj
-        );
+
+  const updateProjectCache = (updatedProject: Project) => {
+    setProjects((prevProjects) => {
+      return prevProjects.map((proj) =>
+        proj.id === updatedProject.id ? updatedProject : proj
+      );
     });
   }
 
@@ -84,6 +89,7 @@ const Works = () => {
       projectLinks: values.projectLinks,
       image: values.image ?? "",
       imageName: imageFile?.name ?? undefined,
+      date: new Date().toISOString(),
     };
 
     // Optimistic UI update: Add a temporary project with id 'newProject'
@@ -165,7 +171,7 @@ const Works = () => {
       return;
     }
 
-     updateProjectCache(values)
+    updateProjectCache(values)
     setEditMode(null);
 
     const projectRef = doc(db, "projects", values.id);
@@ -177,16 +183,18 @@ const Works = () => {
       image: values.image,
     });
   }
-  
-  /*const handleSearchOnChange =(e: ChangeEvent<HTMLInputElement>) =>  {
-    const searchString = e.target.value
-    if (searchString === "" || !projects) { setFilteredProjects(null); return; }
-    const searchResults = (filteredProjects ?? projects).filter((project) => {
+
+  const handleSearchOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const searchString = e.target.value;
+    if (!projects) return;
+
+    const searchResults = projects.filter((project) => {
       return project.title.toLowerCase().includes(searchString.toLowerCase().trim());
     });
-    setFilteredProjects(searchResults);
-  }*/
-  
+
+    setFilteredProjects(searchResults.length > 0 ? searchResults : []);
+  };
+
   return (
     <Formik<FormValues>
       initialValues={{
@@ -196,9 +204,11 @@ const Works = () => {
         technologies: [""],
         projectLinks: [{name: "", link: ""}],
         image: '',
+        date: new Date().toISOString(),
       }}
       validationSchema={validations}
       onSubmit={(values) => {
+        console.log("Form values: ", values);
         editMode ? submitEditProject(values) : handleSubmit(values)
       }}
     >
@@ -208,7 +218,6 @@ const Works = () => {
             className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
             <div className="flex justify-between items-center ">
               <LinkButton route={"/"} className="animate-fade-down"/>
-              {/*<input onChange={handleSearchOnChange} />*/}
               {isAuthenticated && !isLoading && (
                 <LinkButton
                   className="animate-fade-down"
@@ -235,8 +244,25 @@ const Works = () => {
               />
             )}
 
+            <div className="flex gap-4 mt-5">
+              <Card
+                themeColor={themeColor}
+                className="w-1/2 bg-white text-center"
+              >
+                <TextField
+                  label="Search a project"
+                  variant="outlined"
+                  className="w-full"
+                  onChange={handleSearchOnChange}
+                />
+              </Card>
+              <Card themeColor={themeColor} className="w-1/2">
+                <h1 className="text-4xl font-bold text-center">Filtering</h1>
+              </Card>
+            </div>
+
             <Projects
-              projects={/*filteredProjects ?? */projects}
+              projects={filteredProjects ?? projects}
               setFieldValue={setFieldValue}
               handleDelete={handleDelete}
               isLoading={isLoading}

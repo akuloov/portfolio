@@ -11,6 +11,7 @@ import {FieldMetaProps, FormikErrors} from "formik";
 import ProjectCardSkeleton from "@/components/worksPage/ProjectCardSkeleton";
 import CreateProjectCard from "@/components/worksPage/CreateProjectCard";
 import useIsAuthenticated from "@/hooks/useIsAuthenticated";
+import formatDate from "@/utils/formatDate";
 
 const Projects = ({
                     projects,
@@ -66,7 +67,7 @@ const Projects = ({
           <Card themeColor={themeColor}
                 className="flex flex-col items-center sm:items-start sm:flex-row mt-6 p-4 sm:p-6 h-full sm:justify-between sm:gap-4"
                 key={project.id + "card"}>
-            <div className="flex flex-col justify-between gap-2 mr-auto sm:mr-0 sm:min-h-[400px]">
+            <div className="flex flex-col gap-2 mr-auto sm:mr-0 sm:min-h-[400px]">
               <div className="flex flex-col w-full">
                 <h2 className="text-xl font-bold">{project.title}</h2>
                 <p className="font-light mb-4 text-sm">{project.description}</p>
@@ -78,7 +79,7 @@ const Projects = ({
                 </ul>
               </div>
               <div
-                className={cn("bg-gray-300 p-4 max-w-[260px] rounded mb-10 sm:mb-0", {"bg-darkslate-400": darkMode})}>
+                className={cn("bg-gray-300 p-4 max-w-[260px] rounded mt-auto", {"bg-darkslate-400": darkMode})}>
                 <h2 className="text-base font-bold mb-2">Project Links</h2>
                 {project.projectLinks.map((item: any, index: number) => (
                   <a key={index} href={item.link} target="_blank"
@@ -87,6 +88,9 @@ const Projects = ({
                     <LinkIcon color={darkMode} width="16" height="16"/>
                   </a>
                 ))}
+              </div>
+              <div className="flex mt-auto mb-10 sm:mb-0">Created:
+                <span className="ml-1 text-darkslate-300">{formatDate(project.date)}</span>
               </div>
             </div>
             <div className="flex flex-col gap-4">
