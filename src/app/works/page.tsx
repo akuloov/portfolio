@@ -7,7 +7,7 @@ import {db, storage} from "@/firebase/firebase.config";
 import {Project} from "@/types/ProjectType";
 import useStore from "@/stateStorage/storage";
 import useIsAuthenticated from "@/hooks/useIsAuthenticated";
-import {Form, Formik, FormikErrors, FormikHelpers} from "formik";
+import {Form, Formik, FormikErrors} from "formik";
 import {FormValues} from "@/types/FormValuesType";
 import {ref, uploadBytes, getDownloadURL, deleteObject,} from "firebase/storage";
 import validations from "@/validation/validations";
@@ -16,6 +16,7 @@ import Projects from "@/components/worksPage/Projects";
 import {TextField} from "@mui/material";
 import Card from "@/components/Card";
 import useThemeColor from "@/hooks/useThemeColor";
+import SortIcon from "@/components/icons/SortIcon";
 
 const Works = () => {
   const {isAuthenticated} = useIsAuthenticated();
@@ -27,12 +28,11 @@ const Works = () => {
   const [editMode, setEditMode] = useState<null | string>(null);
 
   const [submitDone, setSubmitDone] = useState<boolean>(false);
-
   const [isLoading, setIsLoading] = useState(true);
   const projects = useStore((state) => state.projects);
   const setProjects = useStore((state) => state.setProjects);
 
-  const [filteredProjects, setFilteredProjects] = useState<Project[] | null>(null)
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([])
 
   useEffect(() => {
     // initial fetch of projects
@@ -50,7 +50,13 @@ const Works = () => {
         createdDate: doc.data().createdDate,
         updatedDate: doc.data().updatedDate,
       }));
-      setProjects(projectsData);
+      setProjects([...projectsData]);
+      const filteredProjects = [...projectsData].sort((a, b) => {
+        const dateA = new Date(a.createdDate).getTime();
+        const dateB = new Date(b.createdDate).getTime();
+        return dateB - dateA
+      });
+      setFilteredProjects(filteredProjects);
       setIsLoading(false);
     };
     fetchProjects().then();
@@ -58,7 +64,7 @@ const Works = () => {
 
   const uploadProjectCache = async (newProject: Project) => {
     return new Promise<void>((resolve) => {
-      setProjects((prevProjects) => {
+      setFilteredProjects((prevProjects) => {
         const updatedProjects = [newProject, ...prevProjects];
         resolve(); // Resolves the promise after updating the state
         return updatedProjects;
@@ -68,7 +74,7 @@ const Works = () => {
 
   const updateProjectCache = (updatedProject: Project) => {
     updatedProject.updatedDate = new Date().toISOString();
-    setProjects((prevProjects) => {
+    setFilteredProjects((prevProjects) => {
       return prevProjects.map((proj) =>
         proj.id === updatedProject.id ? updatedProject : proj
       );
@@ -108,7 +114,7 @@ const Works = () => {
         const projectRef = doc(collection(db, "projects"));
         const {id, ...projData} = newProject; // Exclude temporary ID
         transaction.set(projectRef, {...projData, image: imageURL});
-        setProjects((prevProjects) =>
+        setFilteredProjects((prevProjects) =>
           prevProjects.map((proj) =>
             proj.id === newProject.id
               ? {...newProject, id}
@@ -124,7 +130,7 @@ const Works = () => {
       console.error("Transaction failed: ", error);
 
       // Roll back optimistic update
-      setProjects((prevProjects) => prevProjects.filter(({id}) => id !== newProject.id));
+      setFilteredProjects((prevProjects) => prevProjects.filter(({id}) => id !== newProject.id));
       setCreateProjectMode(true);
     }
   };
@@ -132,7 +138,7 @@ const Works = () => {
   // Handle project deletion
   const handleDelete = async (project: Project, index: number) => {
     // Optimistic UI update
-    setProjects(projects.filter((proj) => proj.id !== project.id));
+    setFilteredProjects(filteredProjects.filter((proj) => proj.id !== project.id));
     const docRef = doc(db, "projects", project.id);
     if (project.image) {
       const imageRef = ref(storage, `images/${project.imageName}`);
@@ -152,9 +158,9 @@ const Works = () => {
       });
     } catch (error) {
       // Restore UI and log the error
-      const restoredProjects = [...projects];
+      const restoredProjects = [...filteredProjects];
       restoredProjects.splice(index, 0, project);
-      setProjects(restoredProjects);
+      setFilteredProjects(restoredProjects);
       console.error(`Error deleting project with ID: ${project.id} `, {error});
     }
   };
@@ -191,11 +197,25 @@ const Works = () => {
     const searchString = e.target.value;
     if (!projects) return;
 
-    const searchResults = projects.filter((project) => {
+    if (searchString === '') {
+      setFilteredProjects(projects);
+      return
+    }
+
+    const searchResults = filteredProjects.filter((project) => {
       return project.title.toLowerCase().includes(searchString.toLowerCase().trim());
     });
 
-    setFilteredProjects(searchResults.length > 0 ? searchResults : []);
+    setFilteredProjects(searchResults);
+  };
+
+  const sortProjectsByDate = (sortFilter: 'asc' | 'desc'): void => {
+    const sortedProjects = [...filteredProjects].sort((a, b) => {
+      const dateA = new Date(a.createdDate).getTime();
+      const dateB = new Date(b.createdDate).getTime();
+      return sortFilter === 'desc' ? dateB - dateA : dateA - dateB;
+    });
+    setFilteredProjects(sortedProjects);
   };
 
   return (
@@ -218,7 +238,7 @@ const Works = () => {
         <Form className="w-full">
           <main
             className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
-            <div className="flex justify-between items-center ">
+            <div className="flex justify-between items-center">
               <LinkButton route={"/"} className="animate-fade-down"/>
               {isAuthenticated && !isLoading && (
                 <LinkButton
@@ -236,14 +256,36 @@ const Works = () => {
                 className="w-1/2 bg-white text-center"
               >
                 <TextField
-                  label="Search a project"
+                  label="Search project by title"
                   variant="outlined"
                   className="w-full"
                   onChange={handleSearchOnChange}
                 />
               </Card>
-              <Card themeColor={themeColor} className="w-1/2">
-                <h1 className="text-4xl font-bold text-center">Filtering</h1>
+              <Card themeColor={themeColor} className="w-1/2 bg-white text-black flex items-center gap-2">
+                Sort by date:
+                <button
+                  disabled={filteredProjects.length === 0}
+                  type="button"
+                  className="flex items-center justify-center hover:scale-110 cursor-pointer disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-default"
+                  onClick={() => {
+                    console.log('desc')
+                    sortProjectsByDate('desc')
+                  }}
+                >
+                  <SortIcon/>
+                </button>
+                <button
+                  disabled={filteredProjects.length === 0}
+                  type="button"
+                  className="flex items-center justify-center hover:scale-110 cursor-pointer rotate-180 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-default "
+                  onClick={() => {
+                    console.log('asc')
+                    sortProjectsByDate('asc')
+                  }}
+                >
+                  <SortIcon/>
+                </button>
               </Card>
             </div>
             {createProjectMode && (
@@ -258,7 +300,7 @@ const Works = () => {
               />
             )}
             <Projects
-              projects={filteredProjects ?? projects}
+              projects={filteredProjects}
               setFieldValue={setFieldValue}
               handleDelete={handleDelete}
               isLoading={isLoading}

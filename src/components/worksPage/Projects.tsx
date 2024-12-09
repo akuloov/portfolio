@@ -57,11 +57,11 @@ const Projects = ({
             setImageFile={setImageFile}
             isValid={isValid}
             submitDone={submitDone}
-            key={project.id + "edit"}
+            key={project.id}
           />) : (
           <Card themeColor={themeColor}
                 className="flex flex-col items-center sm:items-stretch sm:flex-row mt-6 p-4 sm:p-6 h-full sm:justify-between sm:gap-4"
-                key={project.id + "card"}>
+                key={project.id}>
             <div className="flex flex-col w-full sm:justify-between sm:w-fit  min-h-full mr-auto sm:mr-0 ">
               <div className="flex flex-col w-full">
                 <h2 className="text-xl font-bold">{project.title}</h2>
