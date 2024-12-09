@@ -203,7 +203,7 @@ const Works = () => {
       return
     }
 
-    const searchResults = filteredProjects.filter((project) => {
+    const searchResults = projects.filter((project) => {
       return project.title.toLowerCase().includes(searchString.toLowerCase().trim());
     });
 
@@ -211,6 +211,7 @@ const Works = () => {
   };
 
   const sortProjectsByDate = (sortFilter: 'asc' | 'desc'): void => {
+    console.log('Sorting projects by date:');
     const sortedProjects = [...filteredProjects].sort((a, b) => {
       const dateA = new Date(a.createdDate).getTime();
       const dateB = new Date(b.createdDate).getTime();
@@ -244,7 +245,7 @@ const Works = () => {
             </div>
             <Card
               themeColor={themeColor}
-              className="text-center mt-5 flex items-center justify-between"
+              className="text-center mt-5 flex gap-4 items-center justify-between"
             >
               <TextField
                 label="Search project by title"

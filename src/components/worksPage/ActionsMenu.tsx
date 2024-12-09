@@ -73,10 +73,10 @@ const ActionsMenu = ({
               case "Add new project":
                 createProject?.();
                 break;
-              case "Sort by date (desc)":
+              case "Sort by date ↓":
                 sortDesc?.();
                 break;
-              case "Sort by date (asc)":
+              case "Sort by date ↑":
                 sortAsc?.();
                 break;
             }
