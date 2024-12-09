@@ -8,8 +8,6 @@ import {FieldMetaProps, FormikErrors} from "formik";
 import useThemeColor from "@/hooks/useThemeColor";
 import useDarkMode from "@/hooks/useDarkMode";
 import {FormValues} from "@/types/FormValuesType";
-import {useEffect} from "react";
-import {Project} from "@/types/ProjectType";
 
 const CreateProjectCard = ({
                              values,
@@ -18,11 +16,7 @@ const CreateProjectCard = ({
                              imageFile,
                              setImageFile,
                              isValid,
-                             resetForm,
                              submitDone,
-                             editMode,
-                             openEditProject,
-                             key,
                            }: {
                              values: FormValues,
                              setFieldValue: (field: string, value: any, shouldValidate?: boolean) => Promise<void | FormikErrors<FormValues>>,
@@ -30,11 +24,7 @@ const CreateProjectCard = ({
                              imageFile: File | undefined,
                              setImageFile: (file: File | undefined) => void;
                              isValid: boolean;
-                             resetForm: () => void;
                              submitDone: boolean;
-                             editMode: boolean;
-                             openEditProject: (project: Project) => void;
-                             key?: string;
                            }
 ) => {
   const {themeColor} = useThemeColor();
@@ -56,18 +46,10 @@ const CreateProjectCard = ({
   const imageError = getFieldMeta('image').error
   const imageTouched = getFieldMeta('image').touched
 
-  useEffect(() => {
-    if (submitDone) {
-      resetForm()
-    }
-
-  }, [submitDone]);
-
   return (
     <Card
       themeColor={themeColor}
       className="flex  flex-col items-center sm:items-start sm:flex-row mt-6 p-4 sm:p-6 h-full sm:justify-between sm:gap-4"
-      key={key}
     >
       <div className="flex flex-col justify-between gap-2 mr-auto sm:mr-0 sm:min-h-[400px]">
         <div className="flex flex-col w-full">
@@ -88,18 +70,19 @@ const CreateProjectCard = ({
             </h2>
             <IconButton
               size="medium"
-              className="w-[30px] h-[30px] bg-white p-0"
+              className="w-[30px] h-[30px] p-0 hover:scale-110"
               onClick={() => setFieldValue("technologies", [...values.technologies, ""])}
             >
               <div className="text-white">+</div>
             </IconButton>
-            {values.technologies.length !== 1 && (<IconButton
-              size="small"
-              className="w-[30px] h-[30px] bg-white p-0"
-              onClick={() => setFieldValue("technologies", [...values.technologies.slice(0, -1)])}
-            >
-              <div className="text-white">-</div>
-            </IconButton>)}
+            {values.technologies.length !== 1 && (
+              <IconButton
+                size="small"
+                className="w-[30px] h-[30px] p-0 hover:scale-110"
+                onClick={() => setFieldValue("technologies", [...values.technologies.slice(0, -1)])}
+              >
+                <div className="text-white">-</div>
+              </IconButton>)}
           </div>
           <ul className="list-disc list-inside text-sm">
             {values.technologies.map((tech, index) => (
@@ -117,17 +100,17 @@ const CreateProjectCard = ({
           className={cn("bg-gray-300 p-4 max-w-[260px] rounded mb-10 sm:mb-0", {"bg-darkslate-400": darkMode})}>
           <div className="flex items-center">
             <h2 className="text-base font-bold">Project Links</h2>
-            <div className="flex items-center">
+            <div className="flex">
               <IconButton
                 size="medium"
-                className="w-[30px] h-[30px] bg-white p-0 mb-2 hover:scale-110"
+                className="w-[30px] h-[30px] p-0 hover:scale-110"
                 onClick={() => setFieldValue("projectLinks", [...values.projectLinks, {name: "", link: ""}])}
               >
                 <div className="text-white">+</div>
               </IconButton>
               <IconButton
                 size="small"
-                className="w-[30px] h-[30px] bg-white p-0"
+                className="w-[30px] h-[30px] p-0 hover:scale-110"
                 onClick={() => setFieldValue("projectLinks", [...values.projectLinks.slice(0, -1)])}
               >
                 <div className="text-white">-</div>
@@ -159,7 +142,6 @@ const CreateProjectCard = ({
               </div>
             </div>
           ))}
-
         </div>
       </div>
       <div className="flex flex-col h-full justify-between gap-2 items-end sm:min-h-[400px]">

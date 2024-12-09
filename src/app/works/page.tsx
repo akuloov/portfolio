@@ -1,21 +1,26 @@
 "use client";
 
-import {ChangeEvent, ChangeEventHandler, SetStateAction, useEffect, useState} from "react";
+import React, {ChangeEvent, SetStateAction, useEffect, useState} from "react";
 import LinkButton from "@/components/LinkButton";
 import {collection, doc, getDocs, runTransaction, updateDoc} from "@firebase/firestore";
 import {db, storage} from "@/firebase/firebase.config";
 import {Project} from "@/types/ProjectType";
 import useStore from "@/stateStorage/storage";
 import useIsAuthenticated from "@/hooks/useIsAuthenticated";
-import {Form, Formik, FormikErrors, FormikHelpers} from "formik";
+import {Form, Formik, FormikErrors} from "formik";
 import {FormValues} from "@/types/FormValuesType";
 import {ref, uploadBytes, getDownloadURL, deleteObject,} from "firebase/storage";
 import validations from "@/validation/validations";
 import CreateProjectCard from "@/components/worksPage/CreateProjectCard";
 import Projects from "@/components/worksPage/Projects";
+import {TextField} from "@mui/material";
+import Card from "@/components/Card";
+import useThemeColor from "@/hooks/useThemeColor";
+import SortIcon from "@/components/icons/SortIcon";
 
 const Works = () => {
   const {isAuthenticated} = useIsAuthenticated();
+  const {themeColor} = useThemeColor();
 
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
 
@@ -23,12 +28,11 @@ const Works = () => {
   const [editMode, setEditMode] = useState<null | string>(null);
 
   const [submitDone, setSubmitDone] = useState<boolean>(false);
-
   const [isLoading, setIsLoading] = useState(true);
   const projects = useStore((state) => state.projects);
   const setProjects = useStore((state) => state.setProjects);
-  
-  /*const [filteredProjects, setFilteredProjects] = useState<Project[] | null>(null)*/
+
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([])
 
   useEffect(() => {
     // initial fetch of projects
@@ -43,8 +47,16 @@ const Works = () => {
         projectLinks: doc.data().projectLinks,
         image: doc.data().image,
         imageName: doc.data().imageName,
+        createdDate: doc.data().createdDate,
+        updatedDate: doc.data().updatedDate,
       }));
-      setProjects(projectsData);
+      setProjects([...projectsData]);
+      const filteredProjects = [...projectsData].sort((a, b) => {
+        const dateA = new Date(a.createdDate).getTime();
+        const dateB = new Date(b.createdDate).getTime();
+        return dateB - dateA
+      });
+      setFilteredProjects(filteredProjects);
       setIsLoading(false);
     };
     fetchProjects().then();
@@ -52,19 +64,20 @@ const Works = () => {
 
   const uploadProjectCache = async (newProject: Project) => {
     return new Promise<void>((resolve) => {
-      setProjects((prevProjects) => {
+      setFilteredProjects((prevProjects) => {
         const updatedProjects = [newProject, ...prevProjects];
         resolve(); // Resolves the promise after updating the state
         return updatedProjects;
       });
     });
   };
-  
-  const updateProjectCache =  (updatedProject: Project) => { 
-      setProjects((prevProjects) => {
-       return prevProjects.map((proj) =>
-          proj.id === updatedProject.id ? updatedProject : proj
-        );
+
+  const updateProjectCache = (updatedProject: Project) => {
+    updatedProject.updatedDate = new Date().toISOString();
+    setFilteredProjects((prevProjects) => {
+      return prevProjects.map((proj) =>
+        proj.id === updatedProject.id ? updatedProject : proj
+      );
     });
   }
 
@@ -75,7 +88,7 @@ const Works = () => {
     return getDownloadURL(imageRef);
   };
 
-  const handleSubmit = async (values: FormValues) => {
+  const handleSubmit = async (values: FormValues, resetForm: () => void) => {
     const newProject: Project = {
       id: "newProject",
       title: values.title,
@@ -84,6 +97,7 @@ const Works = () => {
       projectLinks: values.projectLinks,
       image: values.image ?? "",
       imageName: imageFile?.name ?? undefined,
+      createdDate: new Date().toISOString(),
     };
 
     // Optimistic UI update: Add a temporary project with id 'newProject'
@@ -96,29 +110,27 @@ const Works = () => {
       // Upload image if necessary
       const imageURL = await uploadImage(imageFile);
       // Execute Firestore transaction
-      const newProjectProperties = await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async (transaction) => {
         const projectRef = doc(collection(db, "projects"));
         const {id, ...projData} = newProject; // Exclude temporary ID
         transaction.set(projectRef, {...projData, image: imageURL});
-        return {id: projectRef.id, image: imageURL};
+        setFilteredProjects((prevProjects) =>
+          prevProjects.map((proj) =>
+            proj.id === newProject.id
+              ? {...newProject, id}
+              : proj
+          )
+        );
       });
-
-      // Update the state with the new project ID and image
-      setProjects((prevProjects) =>
-        prevProjects.map((proj) =>
-          proj.id === newProject.id
-            ? {...newProject, ...newProjectProperties}
-            : proj
-        )
-      );
 
       setImageFile(undefined);
       setSubmitDone(true);
+      resetForm()
     } catch (error) {
       console.error("Transaction failed: ", error);
 
       // Roll back optimistic update
-      setProjects((prevProjects) => prevProjects.filter(({id}) => id !== newProject.id));
+      setFilteredProjects((prevProjects) => prevProjects.filter(({id}) => id !== newProject.id));
       setCreateProjectMode(true);
     }
   };
@@ -126,7 +138,7 @@ const Works = () => {
   // Handle project deletion
   const handleDelete = async (project: Project, index: number) => {
     // Optimistic UI update
-    setProjects(projects.filter((proj) => proj.id !== project.id));
+    setFilteredProjects(filteredProjects.filter((proj) => proj.id !== project.id));
     const docRef = doc(db, "projects", project.id);
     if (project.image) {
       const imageRef = ref(storage, `images/${project.imageName}`);
@@ -146,9 +158,9 @@ const Works = () => {
       });
     } catch (error) {
       // Restore UI and log the error
-      const restoredProjects = [...projects];
+      const restoredProjects = [...filteredProjects];
       restoredProjects.splice(index, 0, project);
-      setProjects(restoredProjects);
+      setFilteredProjects(restoredProjects);
       console.error(`Error deleting project with ID: ${project.id} `, {error});
     }
   };
@@ -159,14 +171,15 @@ const Works = () => {
     setEditMode(project.id);
   };
 
-  const submitEditProject = async (values: FormValues) => {
+  const submitEditProject = async (values: FormValues, resetForm: () => void) => {
     if (!values.id) {
       console.error("Project ID is missing");
       return;
     }
 
-     updateProjectCache(values)
+    updateProjectCache(values)
     setEditMode(null);
+    resetForm();
 
     const projectRef = doc(db, "projects", values.id);
     await updateDoc(projectRef, {
@@ -175,18 +188,36 @@ const Works = () => {
       technologies: values.technologies,
       projectLinks: values.projectLinks,
       image: values.image,
+      createdDate: values.createdDate,
+      updatedDate: new Date().toISOString(),
     });
   }
-  
-  /*const handleSearchOnChange =(e: ChangeEvent<HTMLInputElement>) =>  {
-    const searchString = e.target.value
-    if (searchString === "" || !projects) { setFilteredProjects(null); return; }
-    const searchResults = (filteredProjects ?? projects).filter((project) => {
+
+  const handleSearchOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const searchString = e.target.value;
+    if (!projects) return;
+
+    if (searchString === '') {
+      setFilteredProjects(projects);
+      return
+    }
+
+    const searchResults = filteredProjects.filter((project) => {
       return project.title.toLowerCase().includes(searchString.toLowerCase().trim());
     });
+
     setFilteredProjects(searchResults);
-  }*/
-  
+  };
+
+  const sortProjectsByDate = (sortFilter: 'asc' | 'desc'): void => {
+    const sortedProjects = [...filteredProjects].sort((a, b) => {
+      const dateA = new Date(a.createdDate).getTime();
+      const dateB = new Date(b.createdDate).getTime();
+      return sortFilter === 'desc' ? dateB - dateA : dateA - dateB;
+    });
+    setFilteredProjects(sortedProjects);
+  };
+
   return (
     <Formik<FormValues>
       initialValues={{
@@ -196,19 +227,19 @@ const Works = () => {
         technologies: [""],
         projectLinks: [{name: "", link: ""}],
         image: '',
+        createdDate: new Date().toISOString(),
       }}
       validationSchema={validations}
-      onSubmit={(values) => {
-        editMode ? submitEditProject(values) : handleSubmit(values)
+      onSubmit={(values, {resetForm}) => {
+        editMode ? submitEditProject(values, resetForm) : handleSubmit(values, resetForm)
       }}
     >
-      {({values, setFieldValue, getFieldMeta, resetForm, isValid, setValues}) => (
+      {({values, setFieldValue, getFieldMeta, isValid, setValues}) => (
         <Form className="w-full">
           <main
             className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
-            <div className="flex justify-between items-center ">
+            <div className="flex justify-between items-center">
               <LinkButton route={"/"} className="animate-fade-down"/>
-              {/*<input onChange={handleSearchOnChange} />*/}
               {isAuthenticated && !isLoading && (
                 <LinkButton
                   className="animate-fade-down"
@@ -219,7 +250,44 @@ const Works = () => {
                 />
               )}
             </div>
-
+            <div className="flex gap-4 mt-5">
+              <Card
+                themeColor={themeColor}
+                className="w-1/2 bg-white text-center"
+              >
+                <TextField
+                  label="Search project by title"
+                  variant="outlined"
+                  className="w-full"
+                  onChange={handleSearchOnChange}
+                />
+              </Card>
+              <Card themeColor={themeColor} className="w-1/2 bg-white text-black flex items-center gap-2">
+                Sort by date:
+                <button
+                  disabled={filteredProjects.length === 0}
+                  type="button"
+                  className="flex items-center justify-center hover:scale-110 cursor-pointer disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-default"
+                  onClick={() => {
+                    console.log('desc')
+                    sortProjectsByDate('desc')
+                  }}
+                >
+                  <SortIcon/>
+                </button>
+                <button
+                  disabled={filteredProjects.length === 0}
+                  type="button"
+                  className="flex items-center justify-center hover:scale-110 cursor-pointer rotate-180 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-default "
+                  onClick={() => {
+                    console.log('asc')
+                    sortProjectsByDate('asc')
+                  }}
+                >
+                  <SortIcon/>
+                </button>
+              </Card>
+            </div>
             {createProjectMode && (
               <CreateProjectCard
                 values={values}
@@ -228,15 +296,11 @@ const Works = () => {
                 imageFile={imageFile}
                 setImageFile={setImageFile}
                 isValid={isValid}
-                resetForm={resetForm}
                 submitDone={submitDone}
-                editMode={false}
-                openEditProject={(project) => openEditProject(project, setValues)}
               />
             )}
-
             <Projects
-              projects={/*filteredProjects ?? */projects}
+              projects={filteredProjects}
               setFieldValue={setFieldValue}
               handleDelete={handleDelete}
               isLoading={isLoading}
@@ -246,7 +310,6 @@ const Works = () => {
               imageFile={imageFile}
               setImageFile={setImageFile}
               isValid={isValid}
-              resetForm={resetForm}
               submitDone={submitDone}
               setValues={setValues}
               editProjectID={editMode}

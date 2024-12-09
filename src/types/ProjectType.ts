@@ -6,4 +6,6 @@ export type Project = {
   projectLinks: { name: string; link: string }[];
   image:  undefined | string;
   imageName?: string;
+  createdDate: string;
+  updatedDate?: string
 }

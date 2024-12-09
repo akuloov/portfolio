@@ -3,7 +3,6 @@ import Card from "@/components/Card";
 import {cn} from "@/utils/cn";
 import LinkIcon from "@/components/icons/LinkIcon";
 import Image from "next/image";
-import LinkCard from "@/components/LinkCard";
 import useDarkMode from "@/hooks/useDarkMode";
 import useThemeColor from "@/hooks/useThemeColor";
 import {FormValues} from "@/types/FormValuesType";
@@ -11,6 +10,8 @@ import {FieldMetaProps, FormikErrors} from "formik";
 import ProjectCardSkeleton from "@/components/worksPage/ProjectCardSkeleton";
 import CreateProjectCard from "@/components/worksPage/CreateProjectCard";
 import useIsAuthenticated from "@/hooks/useIsAuthenticated";
+import formatDate from "@/utils/formatDate";
+import ActionsMenu from "@/components/worksPage/ActionsMenu";
 
 const Projects = ({
                     projects,
@@ -24,7 +25,6 @@ const Projects = ({
                     imageFile,
                     setImageFile,
                     isValid,
-                    resetForm,
                     submitDone,
                     editProjectID,
                   }: {
@@ -38,7 +38,6 @@ const Projects = ({
   imageFile: File | undefined,
   setImageFile: (file: File | undefined) => void;
   isValid: boolean;
-  resetForm: () => void;
   submitDone: boolean;
   setValues: (values: React.SetStateAction<FormValues>, shouldValidate?: boolean) => Promise<void | FormikErrors<FormValues>>;
   editProjectID: string | null;
@@ -57,16 +56,13 @@ const Projects = ({
             imageFile={imageFile}
             setImageFile={setImageFile}
             isValid={isValid}
-            resetForm={resetForm}
             submitDone={submitDone}
-            editMode
-            openEditProject={(project) => openEditProject(project, setValues)}
-            key={project.id + "edit"}
+            key={project.id}
           />) : (
           <Card themeColor={themeColor}
-                className="flex flex-col items-center sm:items-start sm:flex-row mt-6 p-4 sm:p-6 h-full sm:justify-between sm:gap-4"
-                key={project.id + "card"}>
-            <div className="flex flex-col justify-between gap-2 mr-auto sm:mr-0 sm:min-h-[400px]">
+                className="flex flex-col items-center sm:items-stretch sm:flex-row mt-6 p-4 sm:p-6 h-full sm:justify-between sm:gap-4"
+                key={project.id}>
+            <div className="flex flex-col w-full sm:justify-between sm:w-fit  min-h-full mr-auto sm:mr-0 ">
               <div className="flex flex-col w-full">
                 <h2 className="text-xl font-bold">{project.title}</h2>
                 <p className="font-light mb-4 text-sm">{project.description}</p>
@@ -77,36 +73,35 @@ const Projects = ({
                   ))}
                 </ul>
               </div>
-              <div
-                className={cn("bg-gray-300 p-4 max-w-[260px] rounded mb-10 sm:mb-0", {"bg-darkslate-400": darkMode})}>
-                <h2 className="text-base font-bold mb-2">Project Links</h2>
-                {project.projectLinks.map((item: any, index: number) => (
-                  <a key={index} href={item.link} target="_blank"
-                     className="font-light w-fit flex items-center gap-1 hover:opacity-70 transition-all">
-                    {item.name}
-                    <LinkIcon color={darkMode} width="16" height="16"/>
-                  </a>
-                ))}
+              <div className={"flex flex-col gap-6"}>
+                <div
+                  className={cn("bg-gray-300 p-4 max-w-[260px] rounded mt-auto", {"bg-darkslate-400": darkMode})}>
+                  <h2 className="text-base font-bold mb-2">Project Links</h2>
+                  {project.projectLinks.map((item: any, index: number) => (
+                    <a key={index} href={item.link} target="_blank"
+                       className="font-light w-fit flex items-center gap-1 hover:opacity-70 transition-all">
+                      {item.name}
+                      <LinkIcon color={darkMode} width="16" height="16"/>
+                    </a>
+                  ))}
+                </div>
+                <div className="mb-10 sm:mb-0 mt-auto">
+                  <div className="ml-1 text-darkslate-300 text-xs">
+                    {project.updatedDate ? "Last updated" : "Created"} {formatDate(project.updatedDate ?? project.createdDate)}
+                  </div>
+                </div>
               </div>
             </div>
             <div className="flex flex-col gap-4">
+              {isAuthenticated && (
+                <ActionsMenu
+                  openEditProject={() => openEditProject(project, setValues)}
+                  handleDelete={() => handleDelete(project, index, setFieldValue)}
+                />
+              )}
               {project.image && (
                 <Image src={project.image} width={300} height={400} className="rounded w-[300px] h-[400px]"
-                       alt="gdfgdf"/>)}
-              <div className="flex justify-between">
-                {isAuthenticated && (
-                  <>
-                    <LinkCard
-                      themeColor="ThemeBlue"
-                      onClick={() => openEditProject(project, setValues)}
-                    >Edit project</LinkCard>
-                    <LinkCard
-                      themeColor="ThemeRed"
-                      onClick={() => handleDelete(project, index, setFieldValue)}
-                    >Delete project</LinkCard>
-                  </>
-                )}
-              </div>
+                       alt="project image"/>)}
             </div>
           </Card>
         )
