@@ -97,6 +97,7 @@ const Projects = ({
                 <ActionsMenu
                   openEditProject={() => openEditProject(project, setValues)}
                   handleDelete={() => handleDelete(project, index, setFieldValue)}
+                  options={['Edit project', 'Delete project']}
                 />
               )}
               {project.image && (

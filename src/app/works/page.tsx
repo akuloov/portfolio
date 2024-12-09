@@ -17,6 +17,7 @@ import {TextField} from "@mui/material";
 import Card from "@/components/Card";
 import useThemeColor from "@/hooks/useThemeColor";
 import SortIcon from "@/components/icons/SortIcon";
+import ActionsMenu from "@/components/worksPage/ActionsMenu";
 
 const Works = () => {
   const {isAuthenticated} = useIsAuthenticated();
@@ -240,54 +241,46 @@ const Works = () => {
             className="gap-2 sm:gap-2 md:gap-3 lg:gap-4 text-white m-auto p-2 max-w-6xl overflow-hidden relative w-full transition-all sm:p-4 md:p-6 md:mt-4">
             <div className="flex justify-between items-center">
               <LinkButton route={"/"} className="animate-fade-down"/>
-              {isAuthenticated && !isLoading && (
-                <LinkButton
-                  className="animate-fade-down"
-                  text="Add new project"
-                  onClick={() => {
-                    setCreateProjectMode(true);
-                  }}
-                />
-              )}
             </div>
-            <div className="flex gap-4 mt-5">
-              <Card
-                themeColor={themeColor}
-                className="w-1/2 bg-white text-center"
-              >
-                <TextField
-                  label="Search project by title"
-                  variant="outlined"
-                  className="w-full"
-                  onChange={handleSearchOnChange}
-                />
-              </Card>
-              <Card themeColor={themeColor} className="w-1/2 bg-white text-black flex items-center gap-2">
-                Sort by date:
-                <button
-                  disabled={filteredProjects.length === 0}
-                  type="button"
-                  className="flex items-center justify-center hover:scale-110 cursor-pointer disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-default"
-                  onClick={() => {
-                    console.log('desc')
-                    sortProjectsByDate('desc')
-                  }}
-                >
-                  <SortIcon/>
-                </button>
-                <button
-                  disabled={filteredProjects.length === 0}
-                  type="button"
-                  className="flex items-center justify-center hover:scale-110 cursor-pointer rotate-180 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-default "
-                  onClick={() => {
-                    console.log('asc')
-                    sortProjectsByDate('asc')
-                  }}
-                >
-                  <SortIcon/>
-                </button>
-              </Card>
-            </div>
+            <Card
+              themeColor={themeColor}
+              className="text-center mt-5 flex items-center justify-between"
+            >
+              <TextField
+                label="Search project by title"
+                variant="outlined"
+                className="w-full text-white outline-white"
+                onChange={handleSearchOnChange}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'white',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'white',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'white',
+                    },
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'white',
+                    '&.Mui-focused': {
+                      color: 'white',
+                    },
+                  },
+                  '& .MuiInputBase-input': {
+                    color: 'white',
+                  },
+                }}
+              />
+              <ActionsMenu
+                options={[...(isAuthenticated ? ['Add new project'] : []), 'Sort by date ↓', 'Sort by date ↑']}
+                sortDesc={() => sortProjectsByDate('desc')}
+                sortAsc={() => sortProjectsByDate('asc')}
+                createProject={() => setCreateProjectMode(true)}
+              />
+            </Card>
             {createProjectMode && (
               <CreateProjectCard
                 values={values}

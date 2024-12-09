@@ -7,16 +7,19 @@ import React from "react";
 const ActionsMenu = ({
                        openEditProject,
                        handleDelete,
+                       createProject,
+                       sortDesc,
+                       sortAsc,
+                       options,
                      }: {
-  openEditProject: () => void;
-  handleDelete: () => void;
+  openEditProject?: () => void;
+  handleDelete?: () => void;
+  createProject?: () => void;
+  sortDesc?: () => void;
+  sortAsc?: () => void;
+  options: string[];
 }) => {
   const ITEM_HEIGHT = 48;
-
-  const options = [
-    'Edit project',
-    'Delete project',
-  ];
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -60,7 +63,23 @@ const ActionsMenu = ({
         {options.map((option) => (
           <MenuItem key={option} onClick={() => {
             handleClose();
-            option === 'Edit project' ? openEditProject() : handleDelete();
+            switch (option) {
+              case "Edit project":
+                openEditProject?.();
+                break;
+              case "Delete project":
+                handleDelete?.();
+                break;
+              case "Add new project":
+                createProject?.();
+                break;
+              case "Sort by date (desc)":
+                sortDesc?.();
+                break;
+              case "Sort by date (asc)":
+                sortAsc?.();
+                break;
+            }
           }}>
             {option}
           </MenuItem>
