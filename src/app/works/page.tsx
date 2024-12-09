@@ -211,7 +211,6 @@ const Works = () => {
   };
 
   const sortProjectsByDate = (sortFilter: 'asc' | 'desc'): void => {
-    console.log('Sorting projects by date:');
     const sortedProjects = [...filteredProjects].sort((a, b) => {
       const dateA = new Date(a.createdDate).getTime();
       const dateB = new Date(b.createdDate).getTime();
