@@ -3,7 +3,6 @@ import Card from "@/components/Card";
 import {cn} from "@/utils/cn";
 import LinkIcon from "@/components/icons/LinkIcon";
 import Image from "next/image";
-import LinkCard from "@/components/LinkCard";
 import useDarkMode from "@/hooks/useDarkMode";
 import useThemeColor from "@/hooks/useThemeColor";
 import {FormValues} from "@/types/FormValuesType";
@@ -12,6 +11,7 @@ import ProjectCardSkeleton from "@/components/worksPage/ProjectCardSkeleton";
 import CreateProjectCard from "@/components/worksPage/CreateProjectCard";
 import useIsAuthenticated from "@/hooks/useIsAuthenticated";
 import formatDate from "@/utils/formatDate";
+import ActionsMenu from "@/components/worksPage/ActionsMenu";
 
 const Projects = ({
                     projects,
@@ -93,21 +93,15 @@ const Projects = ({
               </div>
             </div>
             <div className="flex flex-col gap-4">
+              {isAuthenticated && (
+                <ActionsMenu
+                  openEditProject={() => openEditProject(project, setValues)}
+                  handleDelete={() => handleDelete(project, index, setFieldValue)}
+                />
+              )}
               {project.image && (
                 <Image src={project.image} width={300} height={400} className="rounded w-[300px] h-[400px]"
-                       alt="gdfgdf"/>)}
-              {isAuthenticated && (
-                <div className="flex justify-between">
-                  <LinkCard
-                    themeColor="ThemeBlue"
-                    onClick={() => openEditProject(project, setValues)}
-                  >Edit project</LinkCard>
-                  <LinkCard
-                    themeColor="ThemeRed"
-                    onClick={() => handleDelete(project, index, setFieldValue)}
-                  >Delete project</LinkCard>
-                </div>
-              )}
+                       alt="project image"/>)}
             </div>
           </Card>
         )
