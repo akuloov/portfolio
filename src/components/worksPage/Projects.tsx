@@ -73,9 +73,9 @@ const Projects = ({
                   ))}
                 </ul>
               </div>
-              <div className={"flex flex-col gap-6"}>
+              <div className="flex flex-col gap-6">
                 <div
-                  className={cn("bg-gray-300 p-4 max-w-[260px] rounded mt-auto", {"bg-darkslate-400": darkMode})}>
+                  className={cn("bg-gray-300 p-4 max-w-[260px] rounded mt-6 sm:mt-auto", {"bg-darkslate-400": darkMode})}>
                   <h2 className="text-base font-bold mb-2">Project Links</h2>
                   {project.projectLinks.map((item: any, index: number) => (
                     <a key={index} href={item.link} target="_blank"
@@ -85,19 +85,20 @@ const Projects = ({
                     </a>
                   ))}
                 </div>
-                <div className="mb-10 sm:mb-0 mt-auto">
-                  <div className="ml-1 text-darkslate-300 text-xs">
+                <div className="mt-auto">
+                  <div className="ml-1 text-darkslate-300 text-xs absolute bottom-4 sm:static sm:bottom-auto">
                     {project.updatedDate ? "Last updated" : "Created"} {formatDate(project.updatedDate ?? project.createdDate)}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 mb-10 sm:mb-auto">
               {isAuthenticated && (
                 <ActionsMenu
                   openEditProject={() => openEditProject(project, setValues)}
                   handleDelete={() => handleDelete(project, index, setFieldValue)}
                   options={['Edit project', 'Delete project']}
+                  className="absolute top-3 right-1 sm:static sm:top-auto right:top-auto"
                 />
               )}
               {project.image && (
