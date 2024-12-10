@@ -3,6 +3,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import React from "react";
+import {cn} from "@/utils/cn";
 
 const ActionsMenu = ({
                        openEditProject,
@@ -11,6 +12,7 @@ const ActionsMenu = ({
                        sortDesc,
                        sortAsc,
                        options,
+                       className,
                      }: {
   openEditProject?: () => void;
   handleDelete?: () => void;
@@ -18,6 +20,7 @@ const ActionsMenu = ({
   sortDesc?: () => void;
   sortAsc?: () => void;
   options: string[];
+  className?: string;
 }) => {
   const ITEM_HEIGHT = 48;
 
@@ -39,7 +42,7 @@ const ActionsMenu = ({
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"
         onClick={handleClick}
-        className="!text-white"
+        className={cn("!text-white", className)}
       >
         <MoreVertIcon/>
       </IconButton>
