@@ -39,7 +39,7 @@ const ActionsMenu = ({
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"
         onClick={handleClick}
-        className="text-white"
+        className="!text-white"
       >
         <MoreVertIcon/>
       </IconButton>
