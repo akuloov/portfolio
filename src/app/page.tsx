@@ -17,7 +17,6 @@ import LinkIcon from "@/components/icons/LinkIcon";
 import Link from "next/link";
 import CurrentTime from "@/components/CurrentTime";
 import useDarkMode from "@/hooks/useDarkMode";
-import LinkButton from "@/components/LinkButton";
 
 export default function Home() {
   const {themeColor, setThemeColor} = useThemeColor();

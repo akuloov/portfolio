@@ -16,7 +16,6 @@ import Projects from "@/components/worksPage/Projects";
 import {TextField} from "@mui/material";
 import Card from "@/components/Card";
 import useThemeColor from "@/hooks/useThemeColor";
-import SortIcon from "@/components/icons/SortIcon";
 import ActionsMenu from "@/components/worksPage/ActionsMenu";
 
 const Works = () => {
