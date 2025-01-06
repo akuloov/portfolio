@@ -98,7 +98,7 @@ const Projects = ({
                   openEditProject={() => openEditProject(project, setValues)}
                   handleDelete={() => handleDelete(project, index, setFieldValue)}
                   options={['Edit project', 'Delete project']}
-                  className="!absolute !top-3 !right-1 sm:!static sm:!top-auto right:!top-auto"
+                  className="!absolute !top-3 !right-1 sm:!relative sm:!top-auto sm:!right-auto"
                 />
               )}
               {project.image && (
