@@ -128,7 +128,7 @@ export default function Home() {
           it&apos;s not on my usual list. My goal is to find the right solution for each project.</p>
       </Card>
       <Slider themeColor={themeColor}
-              className="min-w-full md:min-w-[auto] md:max-w-[245px] md:row-span-3 md:col-start-2 md:row-start-5 animate-fade-up animate-once animate-delay-[800ms] md:animate-delay-1000 animate-ease-in-out"/>
+              className="min-w-full min-h-full md:min-w-[auto] md:max-w-[245px] md:row-span-3 md:col-start-2 md:row-start-5 animate-fade-up animate-once animate-delay-[800ms] md:animate-delay-1000 animate-ease-in-out"/>
       <Card themeColor={themeColor}
             className="md:col-start-2 md:row-start-8 md:max-w-[245px] md:row-span-4 animate-fade-up animate-once animate-delay-[1100ms] md:animate-delay-[1600ms] animate-ease-in-out">
         <h2 className="text-xl font-bold mb-4">Let&apos;s start working together!</h2>
