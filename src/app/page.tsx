@@ -103,7 +103,7 @@ export default function Home() {
             className="md:col-span-1 md:row-span-7 animate-fade-up md:animate-fade-right animate-once animate-delay-500 animate-ease-in-out">
         <h2 className="text-xl font-bold">About me</h2>
         <p className="text-sm mb-4">Hi, I&apos;m Maksym, a front-end software developer from Ukraine. Currently in
-          Norway. I have a bachelor&apos;s degree in software engineering. I have commercial experience working in <a className="w-fit inline-flex items-center gap-1 hover:opacity-70 transition-all"
+          Norway. I speak english, norwegian, ukrainian and russian. I have a bachelor&apos;s degree in software engineering. I have commercial experience working in <a className="w-fit inline-flex items-center gap-1 hover:opacity-70 transition-all"
              href="https://abaris.no/"
              target="_blank"
           > Abaris<LinkIcon color={darkMode} width="10" height="10"/>
