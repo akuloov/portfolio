@@ -103,7 +103,13 @@ export default function Home() {
             className="md:col-span-1 md:row-span-7 animate-fade-up md:animate-fade-right animate-once animate-delay-500 animate-ease-in-out">
         <h2 className="text-xl font-bold">About me</h2>
         <p className="text-sm mb-4">Hi, I&apos;m Maksym, a front-end software developer from Ukraine. Currently in
-          Norway. I have a bachelor&apos;s degree in software engineering.</p>
+          Norway. I have a bachelor&apos;s degree in software engineering. I have commercial experience working in
+          <a className="w-fit inline-flex items-center gap-1 hover:opacity-70 transition-all"
+             href="https://abaris.no/"
+             target="_blank"
+          >Abaris<LinkIcon color={darkMode} width="10" height="10"/>
+          </a>
+        </p>
         <p className="text-sm">My primary tools of choice includes:</p>
         <ul className="list-disc list-inside mb-2">
           <li>React</li>
@@ -111,6 +117,11 @@ export default function Home() {
           <li>Javascript</li>
           <li>Typescript</li>
           <li>Tailwind css</li>
+          <li>REST API</li>
+          <li>Zustand</li>
+          <li>TanStack</li>
+          <li>shadcn/ui</li>
+          <li>material UI</li>
         </ul>
         <p className="text-sm mb-2">Beyond coding, I&apos;m passionate about design, illustration, animation and
           traveling.</p>
@@ -122,7 +133,6 @@ export default function Home() {
       <Card themeColor={themeColor}
             className="md:col-start-2 md:row-start-8 md:max-w-[245px] md:row-span-4 animate-fade-up animate-once animate-delay-[1100ms] md:animate-delay-[1600ms] animate-ease-in-out">
         <h2 className="text-xl font-bold mb-4">Let&apos;s start working together!</h2>
-        {/*<h6 className="text-sm text-darkslate-300 font-light">Contact details</h6>*/}
         <a href="mailto:maxim.akulovka@gmail.com"
            className="font-light hover:opacity-70 transition-all">maxim.akulovka@gmail.com</a>
         <p className="font-light text-sm mb-4">Norway</p>
