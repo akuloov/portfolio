@@ -204,5 +204,8 @@ export default function Home() {
         © 2024 · Crafted with ♥️ using Next JS by Maksym Akulov.
       </Card>
     </main>
+          <div className="flex items-center gap-1 md:flex-col min-[874px]:flex-row">
+            Currently open for work
+          </div>
   );
 }
