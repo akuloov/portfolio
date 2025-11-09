@@ -177,9 +177,7 @@ export default function Home() {
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-ThemeGreen"></span>
               </span>
         <div className="flex items-center gap-1 md:flex-col min-[874px]:flex-row">
-          Currently practiсing at <a href="https://abaris.no/" target="_blank"
-                                     className="font-bold w-fit flex items-center gap-1 hover:opacity-70 transition-all">Abaris<LinkIcon
-          color={darkMode} width="16" height="16"/></a>
+          Currently open for work
         </div>
       </Card>
       <Card themeColor={themeColor}
@@ -204,8 +202,5 @@ export default function Home() {
         © 2024 · Crafted with ♥️ using Next JS by Maksym Akulov.
       </Card>
     </main>
-          <div className="flex items-center gap-1 md:flex-col min-[874px]:flex-row">
-            Currently open for work
-          </div>
   );
 }
